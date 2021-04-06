@@ -9,7 +9,7 @@ void ATankPlayerController::BeginPlay()
 
     ATank* PawnTank = GetControlledTank();
     if(!PawnTank) return;
-    UE_LOG(LogTemp, Warning, TEXT("TankPlayerController for: %s"), *(PawnTank->GetName()));
+    UE_LOG(LogTemp, Warning, TEXT("TankPlayerController possessing: %s."), *(PawnTank->GetName()));
 }
 
 ATank* ATankPlayerController::GetControlledTank() const
