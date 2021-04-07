@@ -32,3 +32,8 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
+// Aiming
+void ATank::AimAt( FVector AimLocation)
+{
+	UE_LOG(LogTemp, Warning, TEXT("%s is aiming at %s."), *GetName(),*AimLocation.ToCompactString());
+}
