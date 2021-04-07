@@ -39,31 +39,55 @@ void ATankPlayerController::AimTowardsCrosshair()
 bool ATankPlayerController::GetSightRayHitLocation( FVector& OutHitLocation) const
 {
     OutHitLocation = FVector(0,0,0);
-    // Raycast through the barrel, if hits returns true and update HitLocation
     
+    // Raycast through the barrel, if hits returns true and update HitLocation
     // Find the crosshair position in Pixel Coordinate
-    UPROPERTY(EditAnywhere)
-    float CrossHairXLocation = 0.5f;
-
-    UPROPERTY(EditAnywhere)
-    float CrossHairYLocation = 0.25f;
-
     int32 ViewportSizeX, ViewportSizeY;
     GetViewportSize(ViewportSizeX, ViewportSizeY);
     FVector2D ScreenLocation(CrossHairXLocation * ViewportSizeX, CrossHairYLocation * ViewportSizeY);
     // UE_LOG(LogTemp, Warning, TEXT("ScreenLocation: %s."), *ScreenLocation.ToString());
 
     // "De-project" the screen position of the crosshair to a world direction
-    FVector CameraLocation, CameraRotation;
-    DeprojectScreenPositionToWorld(
+    FVector LookDirection;
+    if (GetLookDirection(ScreenLocation, LookDirection))
+    {
+    // Line-trace along that look direction, and see what we hit (up to a max range)
+        return GetLookVectorHitLocation(LookDirection, OutHitLocation);        
+    }
+    return false;
+}
+
+bool ATankPlayerController::GetLookDirection( FVector2D ScreenLocation, FVector& LookDirection) const
+{
+    FVector CameraLocation;
+    return DeprojectScreenPositionToWorld(
         ScreenLocation.X,
         ScreenLocation.Y,
         CameraLocation,
-        CameraRotation
+        LookDirection
     );
-    UE_LOG(LogTemp, Warning, TEXT("Lookina at: %s."), *CameraRotation.ToString());
-    
-    // Line-trace along that look direction, and see what we hit (up to a max range)
-    
-    return false;
+}
+
+bool ATankPlayerController::GetLookVectorHitLocation(const FVector LookDirection, FVector& OutHitLocation) const
+{
+    // LineTraceSingleByChannel();
+    FHitResult HitResult;
+    FVector RayStart = PlayerCameraManager->GetCameraLocation(); 
+    FVector RayEnd = RayStart + Range * LookDirection;
+
+    if (GetWorld()->LineTraceSingleByChannel(
+        HitResult,
+        RayStart,
+        RayEnd,
+        ECC_Visibility
+        )
+    )
+    {
+        OutHitLocation = HitResult.Location;
+        return true;
+    }else   
+    {
+        OutHitLocation = FVector(0);
+        return false;
+    }
 }

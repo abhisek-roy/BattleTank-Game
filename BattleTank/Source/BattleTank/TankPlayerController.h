@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "Tank.h"
+#include "Engine/World.h"
 #include "TankPlayerController.generated.h" // Always the last one
 
 /**
@@ -23,7 +24,18 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 private:
+	UPROPERTY(EditAnywhere)
+	float Range = 1000000.0f;
+	
+	UPROPERTY(EditAnywhere)
+    float CrossHairXLocation = 0.5f;
+
+    UPROPERTY(EditAnywhere)
+    float CrossHairYLocation = 0.29f;
+
 	void AimTowardsCrosshair();
 	ATank* GetControlledTank() const;
 	bool GetSightRayHitLocation( FVector& HitLocation) const;
+	bool GetLookDirection( FVector2D ScreenLocation, FVector& LookDirection) const;
+	bool GetLookVectorHitLocation(const FVector LookDirection, FVector& OutHitLocation) const;
 };
