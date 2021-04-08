@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "TankAimingComponent.generated.h"
 
 
@@ -16,7 +17,7 @@ public:
 	// Sets default values for this component's properties
 	UTankAimingComponent();
 
-	void AimAt(const FVector AimLocation);
+	void AimAt(FVector AimLocation, float ProjectileSpeed);
 	void SetBarrelReference(UStaticMeshComponent* BarrelToSet);
 
 protected:
