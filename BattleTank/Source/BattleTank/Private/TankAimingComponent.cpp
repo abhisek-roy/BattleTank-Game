@@ -2,6 +2,7 @@
 
 #define OUT
 
+#include "TankBarrel.h"
 #include "TankAimingComponent.h"
 
 // Sets default values for this component's properties
@@ -14,7 +15,7 @@ UTankAimingComponent::UTankAimingComponent()
 	// ...
 }
 
-void UTankAimingComponent::SetBarrelReference(UStaticMeshComponent* BarrelToSet)
+void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet)
 {
 	Barrel = BarrelToSet;
 }
@@ -44,8 +45,7 @@ void UTankAimingComponent::AimAt(FVector AimLocation, float ProjectileSpeed)
 	FVector StartLocation = Barrel->GetSocketLocation(FName("Projectile"));
 	FVector AimDirection(0);
 	TArray < AActor * > ActorsToIgnore = {Barrel->GetOwner()};
-
-	if (UGameplayStatics::SuggestProjectileVelocity(
+	bool HasValidSol = UGameplayStatics::SuggestProjectileVelocity(
 		this,
 		OutLaunchVelocity,
 		StartLocation,
@@ -57,13 +57,27 @@ void UTankAimingComponent::AimAt(FVector AimLocation, float ProjectileSpeed)
 		ESuggestProjVelocityTraceOption::DoNotTrace,
 		ECR_Block,
 		ActorsToIgnore,
-		true
-		)
-	)
+		false
+		);
+
+	if ( HasValidSol )
 	{
 		AimDirection = OutLaunchVelocity.GetSafeNormal();
-		UE_LOG(LogTemp, Warning, TEXT("%s firing at speed: %s."),*GetOwner()->GetName(), *AimDirection.ToCompactString());
+		// UE_LOG(LogTemp, Warning, TEXT("%s firing at speed: %s."),*GetOwner()->GetName(), *AimDirection.ToCompactString());
+		MoveBarrelTowards(AimDirection);
 	}
 	
+}
 
+
+void UTankAimingComponent::MoveBarrelTowards( FVector AimDirection )
+{
+	// Convert AimDirection to Polar Coordinates
+	// Get Turret and Barrel references
+	
+	// Find the differences between current barrel rotation and aimdirection
+	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
+	auto AimAsRotator = AimDirection.Rotation();
+	auto DeltaRotator = AimAsRotator - BarrelRotator;
+	Barrel->Elevate(5); //TODO Remove magic number
 }
