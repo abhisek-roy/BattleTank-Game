@@ -1,5 +1,6 @@
 // Copyright 2021, Abhisek Roy
 
+#include "Tank.h"
 #include "TankPlayerController.h"
 
 void ATankPlayerController::BeginPlay()

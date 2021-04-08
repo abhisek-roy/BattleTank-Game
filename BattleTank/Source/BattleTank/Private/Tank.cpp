@@ -1,6 +1,6 @@
 // Copyright 2021, Abhisek Roy
 
-
+#include "TankAimingComponent.h"
 #include "Tank.h"
 
 // Sets default values
@@ -23,13 +23,6 @@ void ATank::BeginPlay()
 {
 	Super::BeginPlay();
 	
-}
-
-// Called every frame
-void ATank::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
 }
 
 // Called to bind functionality to input

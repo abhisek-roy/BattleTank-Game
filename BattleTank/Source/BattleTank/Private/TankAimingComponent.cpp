@@ -3,6 +3,7 @@
 #define OUT
 
 #include "TankBarrel.h"
+#include "Kismet/GameplayStatics.h"
 #include "TankAimingComponent.h"
 
 // Sets default values for this component's properties
@@ -18,7 +19,6 @@ UTankAimingComponent::UTankAimingComponent()
 void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet)
 {
 	Barrel = BarrelToSet;
-	// UE_LOG(LogTemp, Warning, TEXT("%s"), *Barrel->GetName());
 }
 
 // Called when the game starts
@@ -32,7 +32,7 @@ void UTankAimingComponent::BeginPlay()
 
 
 // Called every frame
-void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) // TODO: Do we need this?
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
@@ -64,10 +64,15 @@ void UTankAimingComponent::AimAt(FVector AimLocation, float ProjectileSpeed)
 	if ( HasValidSol )
 	{
 		AimDirection = OutLaunchVelocity.GetSafeNormal();
-		// UE_LOG(LogTemp, Warning, TEXT("%s firing at speed: %s."),*GetOwner()->GetName(), *AimDirection.ToCompactString());
 		MoveBarrelTowards(AimDirection);
+
+		auto Time = GetWorld()->GetTimeSeconds();
+		UE_LOG(LogTemp, Warning, TEXT("%f: Solution found."), Time);
+	}else 
+	{
+		auto Time = GetWorld()->GetTimeSeconds();
+		UE_LOG(LogTemp, Warning, TEXT("%f: No solution found."), Time);
 	}
-	
 }
 
 
@@ -81,5 +86,5 @@ void UTankAimingComponent::MoveBarrelTowards( FVector AimDirection )
 	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
 	auto AimAsRotator = AimDirection.Rotation();
 	auto DeltaRotator = AimAsRotator - BarrelRotator;
-	Barrel->Elevate(5); //TODO Remove magic number
+	Barrel->Elevate(1); //TODO Remove magic number
 }
