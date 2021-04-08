@@ -18,6 +18,7 @@ UTankAimingComponent::UTankAimingComponent()
 void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet)
 {
 	Barrel = BarrelToSet;
+	// UE_LOG(LogTemp, Warning, TEXT("%s"), *Barrel->GetName());
 }
 
 // Called when the game starts
@@ -76,6 +77,7 @@ void UTankAimingComponent::MoveBarrelTowards( FVector AimDirection )
 	// Get Turret and Barrel references
 	
 	// Find the differences between current barrel rotation and aimdirection
+	if(!Barrel) return;
 	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
 	auto AimAsRotator = AimDirection.Rotation();
 	auto DeltaRotator = AimAsRotator - BarrelRotator;
