@@ -39,5 +39,5 @@ private:
 	void SetTurretReference(UTankTurret* TurretToSet);
 
 	UPROPERTY(EditAnywhere, Category = Firing)
-	float ProjectileSpeed = 100000.0f; // TODO need better defaults
+	float ProjectileSpeed = 4000.0f; // TODO need better defaults
 };

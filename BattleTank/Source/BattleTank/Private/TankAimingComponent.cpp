@@ -19,11 +19,13 @@ UTankAimingComponent::UTankAimingComponent()
 
 void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet)
 {
+	if(!BarrelToSet) return;
 	Barrel = BarrelToSet;
 }
 
 void UTankAimingComponent::SetTurretReference(UTankTurret* TurretToSet)
 {
+	if(!TurretToSet) return;
 	Turret = TurretToSet;
 }
 
@@ -59,12 +61,12 @@ void UTankAimingComponent::AimAt(FVector AimLocation, float ProjectileSpeed)
 		AimLocation,
 		ProjectileSpeed,
 		false,
-		5.0,
+		0.0,
 		0,
 		ESuggestProjVelocityTraceOption::DoNotTrace,
 		ECR_Block,
 		ActorsToIgnore,
-		false
+		true
 		);
 
 	if ( HasValidSol )
@@ -78,12 +80,13 @@ void UTankAimingComponent::AimAt(FVector AimLocation, float ProjectileSpeed)
 void UTankAimingComponent::MoveBarrelTowards( FVector AimDirection )
 {
 	// Convert AimDirection to Polar Coordinates
-	// Get Turret and Barrel references
+	// Get Barrel reference
 	
 	// Find the differences between current barrel rotation and aimdirection
 	if(!Barrel) return;
 	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
 	auto AimAsRotator = AimDirection.Rotation();
 	auto DeltaRotator = AimAsRotator - BarrelRotator;
-	Barrel->Elevate(DeltaRotator.Pitch); //TODO Remove magic number
+	Barrel->Elevate(DeltaRotator.Pitch);
+	Turret->Orient(DeltaRotator.Yaw);
 }
