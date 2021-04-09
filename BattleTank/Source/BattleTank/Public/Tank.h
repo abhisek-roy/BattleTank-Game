@@ -6,8 +6,6 @@
 #include "GameFramework/Pawn.h"
 #include "Tank.generated.h"
 
-class UTankBarrel;
-class UTankTurret;
 class UTankAimingComponent;
 
 UCLASS()
@@ -33,10 +31,10 @@ public:
 
 private:
 	UFUNCTION( BlueprintCallable, Category = Setup)
-	void SetBarrelReference(UTankBarrel* BarrelToSet);
+	void SetBarrelReference(UStaticMeshComponent* BarrelToSet);
 
 	UFUNCTION( BlueprintCallable, Category = Setup)
-	void SetTurretReference(UTankTurret* TurretToSet);
+	void SetTurretReference(UStaticMeshComponent* TurretToSet);
 
 	UPROPERTY(EditAnywhere, Category = Firing)
 	float ProjectileSpeed = 4000.0f; // TODO need better defaults
