@@ -66,7 +66,7 @@ void UTankAimingComponent::AimAt(FVector AimLocation, float ProjectileSpeed)
 		ESuggestProjVelocityTraceOption::DoNotTrace,
 		ECR_Block,
 		ActorsToIgnore,
-		true
+		false
 		);
 
 	if ( HasValidSol )
@@ -89,4 +89,12 @@ void UTankAimingComponent::MoveBarrelTowards( FVector AimDirection )
 	auto DeltaRotator = AimAsRotator - BarrelRotator;
 	Barrel->Elevate(DeltaRotator.Pitch);
 	Turret->Orient(DeltaRotator.Yaw);
+	// if (DeltaRotator.Yaw < 180)
+	// {
+	// 	Turret->Orient(DeltaRotator.Yaw);
+	// }
+	// else
+	// {
+	// 	Turret->Orient(-DeltaRotator.Yaw);
+	// }
 }
