@@ -86,7 +86,23 @@ void UTankAimingComponent::MoveBarrelTowards( FVector AimDirection )
 	auto DeltaRotator = AimAsRotator - BarrelRotator;
 	
 	ElevateBarrel(DeltaRotator.Pitch);
-	OrientTurret(DeltaRotator.Yaw);
+	
+	if (DeltaRotator.Yaw > 180.f)
+	{
+		OrientTurret(-1.f);
+	}
+	else if (DeltaRotator.Yaw < -180.f)
+	{
+		OrientTurret(1.f);
+	}
+	else
+	{
+		OrientTurret(DeltaRotator.Yaw);
+	}
+	
+
+	// OrientTurret(DeltaRotator.Yaw);
+	UE_LOG(LogTemp, Warning, TEXT("Yaw: %f."), DeltaRotator.Yaw);
 }
 
 void UTankAimingComponent::ElevateBarrel(float RelSpeed)
@@ -113,7 +129,7 @@ void UTankAimingComponent::OrientTurret(float RelSpeed)
     RelSpeed = FMath::Clamp<float>(RelSpeed, -1, 1);
     
     float Yaw = Turret->RelativeRotation.Yaw + RelSpeed * MaxDegreesPerSec * GetWorld()->DeltaTimeSeconds;
-    // RelativeRotation.Add(0.f, RelSpeed * MaxDegreesPerSec * GetWorld()->DeltaTimeSeconds, 0.f);
+    // Turret->RelativeRotation.Add(0.f, RelSpeed * MaxDegreesPerSec * GetWorld()->DeltaTimeSeconds, 0.f);
     Turret->SetRelativeRotation(FRotator(0, Yaw, 0));
 	
 	// float delTheta = RelSpeed * MaxDegreesPerSec * GetWorld()->DeltaTimeSeconds/2/3.14;
