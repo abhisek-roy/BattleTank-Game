@@ -36,6 +36,9 @@ private:
 	UFUNCTION( BlueprintCallable, Category = Setup)
 	void SetTurretReference(UStaticMeshComponent* TurretToSet);
 
+	UFUNCTION( BlueprintCallable, Category = Setup)
+	void Fire();
+
 	UPROPERTY(EditAnywhere, Category = Firing)
-	float ProjectileSpeed = 4000.0f; // TODO need better defaults
+	float ProjectileSpeed = 4000.0f;
 };

@@ -2,8 +2,7 @@
 
 #define OUT
 
-#include "TankBarrel.h"
-#include "TankTurret.h"
+#include "Components/StaticMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "TankAimingComponent.h"
 
@@ -12,7 +11,7 @@ UTankAimingComponent::UTankAimingComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 
 	// ...
 }
@@ -33,14 +32,6 @@ void UTankAimingComponent::SetTurretReference(UStaticMeshComponent* TurretToSet)
 void UTankAimingComponent::BeginPlay()
 {
 	Super::BeginPlay();
-}
-
-
-// Called every frame
-void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) // TODO: Do we need this?
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
 }
 
 void UTankAimingComponent::AimAt(FVector AimLocation, float ProjectileSpeed)
@@ -99,10 +90,6 @@ void UTankAimingComponent::MoveBarrelTowards( FVector AimDirection )
 	{
 		OrientTurret(DeltaRotator.Yaw);
 	}
-	
-
-	// OrientTurret(DeltaRotator.Yaw);
-	UE_LOG(LogTemp, Warning, TEXT("Yaw: %f."), DeltaRotator.Yaw);
 }
 
 void UTankAimingComponent::ElevateBarrel(float RelSpeed)
@@ -129,12 +116,5 @@ void UTankAimingComponent::OrientTurret(float RelSpeed)
     RelSpeed = FMath::Clamp<float>(RelSpeed, -1, 1);
     
     float Yaw = Turret->RelativeRotation.Yaw + RelSpeed * MaxDegreesPerSec * GetWorld()->DeltaTimeSeconds;
-    // Turret->RelativeRotation.Add(0.f, RelSpeed * MaxDegreesPerSec * GetWorld()->DeltaTimeSeconds, 0.f);
-    Turret->SetRelativeRotation(FRotator(0, Yaw, 0));
-	
-	// float delTheta = RelSpeed * MaxDegreesPerSec * GetWorld()->DeltaTimeSeconds/2/3.14;
-	// FQuat FDelRotator(0, 0, FMath::Sin(delTheta), FMath::Cos(delTheta));
-
-	// auto NewRotator = FDelRotator.RotateVector(Turret->RelativeRotation.Vector());
-    // UE_LOG(LogTemp, Warning, TEXT("Easy: %s, Quat: %s."), *FRotator(0, Yaw, 0).ToCompactString(), *NewRotator.ToOrientationRotator().ToCompactString());
-}
+    Turret->SetRelativeRotation(FRotator(0, Yaw, 0));	
+	}
