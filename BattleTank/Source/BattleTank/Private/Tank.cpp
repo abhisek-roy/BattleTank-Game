@@ -1,5 +1,8 @@
 // Copyright 2021, Abhisek Roy
 
+#include "Engine/World.h"
+#include "Components/StaticMeshComponent.h"
+#include "Projectile.h"
 #include "TankAimingComponent.h"
 #include "Tank.h"
 
@@ -16,6 +19,7 @@ ATank::ATank()
 void ATank::SetBarrelReference(UStaticMeshComponent* BarrelToSet)
 {
 	TankAimingComponent->SetBarrelReference(BarrelToSet);
+	Barrel = BarrelToSet;
 }
 
 void ATank::SetTurretReference(UStaticMeshComponent* TurretToSet)
@@ -47,4 +51,11 @@ void ATank::AimAt( FVector AimLocation)
 void ATank::Fire()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Tank is firing"));
+
+	if(!Barrel) return;
+
+	GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, 
+		Barrel->GetSocketLocation(FName("Projectile")), 
+		Barrel->GetSocketRotation(FName("Projectile"))
+	);
 }
