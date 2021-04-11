@@ -48,7 +48,7 @@ private:
 	TSubclassOf<AProjectile> ProjectileBlueprint;
 
 	UPROPERTY(EditDefaultsOnly, Category = Setup)
-	float MaxTractiveForce = 40000.0f;
+	float MaxTractiveForce = 30000000.0f;
 
 	UPROPERTY(EditDefaultsOnly, Category = Firing)
 	float ProjectileSpeed = 4000.0f;

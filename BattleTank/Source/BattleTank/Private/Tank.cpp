@@ -68,11 +68,11 @@ void ATank::Fire()
 void ATank::ApplyForce(float Throttle, UStaticMeshComponent* Track)
 {
 	if(!Track) return;
-	UE_LOG(LogTemp, Warning, TEXT("%s appling %f throttle."), *Track->GetName(), Throttle);
 
 	Throttle = FMath::Clamp(Throttle, -1.f, 1.f);
 	auto Force = Track->GetForwardVector() * Throttle * MaxTractiveForce;
 	auto Location = Track->GetComponentLocation();
+	UE_LOG(LogTemp, Warning, TEXT("%s appling %f force."), *Track->GetName(), Force.Size());
 
 	Track->AddForceAtLocation(Force, Location);
 }
