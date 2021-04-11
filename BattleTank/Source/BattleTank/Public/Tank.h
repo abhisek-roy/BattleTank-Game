@@ -31,6 +31,9 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UFUNCTION( BlueprintCallable, Category = Setup)
+	void Fire();
+
 private:
 	UFUNCTION( BlueprintCallable, Category = Setup)
 	void SetBarrelReference(UStaticMeshComponent* BarrelToSet);
@@ -38,14 +41,14 @@ private:
 	UFUNCTION( BlueprintCallable, Category = Setup)
 	void SetTurretReference(UStaticMeshComponent* TurretToSet);
 
-	UFUNCTION( BlueprintCallable, Category = Setup)
-	void Fire();
-
 	UPROPERTY(EditAnywhere, Category = Firing)
 	float ProjectileSpeed = 4000.0f;
 
 	UPROPERTY(EditAnywhere, Category = Firing)
 	TSubclassOf<AProjectile> ProjectileBlueprint;
+
+	float LastFiredAt = 0.f;
+	float ReloadTime = 3.f;
 
 	UStaticMeshComponent* Barrel;
 };
