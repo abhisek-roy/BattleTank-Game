@@ -15,7 +15,6 @@ ATank::ATank()
 
 	// No need to protect component as constructed in the constructor
 	TankAimingComponent = CreateDefaultSubobject<UTankAimingComponent>(FName("Aiming Component"));
-	TankMovementComponent = CreateDefaultSubobject<UTankMovementComponent>(FName("Movement Component"));
 }
 
 void ATank::SetBarrelReference(UStaticMeshComponent* BarrelToSet)
@@ -29,11 +28,17 @@ void ATank::SetTurretReference(UStaticMeshComponent* TurretToSet)
 	TankAimingComponent->SetTurretReference(TurretToSet);
 }
 
+void ATank::SetMovementComponentReference(UTankMovementComponent* MovementComponentToSet)
+{
+	if(!MovementComponentToSet) return;
+	MovementComponent = MovementComponentToSet;
+	MovementComponent->MaxTractiveForce = MaxTractiveForce;
+}
+
 // Called when the game starts or when spawned
 void ATank::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called to bind functionality to input
@@ -74,7 +79,7 @@ void ATank::ApplyForce(float Throttle, UStaticMeshComponent* Track)
 	Throttle = FMath::Clamp(Throttle, -1.f, 1.f);
 	auto Force = Track->GetForwardVector() * Throttle * MaxTractiveForce;
 	auto Location = Track->GetComponentLocation();
-	UE_LOG(LogTemp, Warning, TEXT("%s appling %f force."), *Track->GetName(), Force.Size());
+	// UE_LOG(LogTemp, Warning, TEXT("%s appling %f force."), *Track->GetName(), Force.Size());
 
 	Track->AddForceAtLocation(Force, Location);
 }

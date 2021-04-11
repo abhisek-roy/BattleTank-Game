@@ -26,9 +26,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	UTankAimingComponent* TankAimingComponent = nullptr;
-
-	UPROPERTY(BlueprintReadOnly, Category = Movement)
-	UTankMovementComponent* TankMovementComponent = nullptr;
+	UTankMovementComponent* MovementComponent = nullptr;
 
 public:	
 
@@ -53,6 +51,9 @@ private:
 
 	UFUNCTION( BlueprintCallable, Category = Setup)
 	void SetTurretReference(UStaticMeshComponent* TurretToSet);
+
+	UFUNCTION( BlueprintCallable, Category = Setup)
+	void SetMovementComponentReference(UTankMovementComponent* MovementComponentToSet);
 
 	UPROPERTY(EditDefaultsOnly, Category = Setup)
 	TSubclassOf<AProjectile> ProjectileBlueprint;
