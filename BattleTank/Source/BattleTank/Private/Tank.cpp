@@ -1,10 +1,10 @@
 // Copyright 2021, Abhisek Roy
 
+#include "Tank.h"
 #include "Engine/World.h"
 #include "Components/StaticMeshComponent.h"
 #include "Projectile.h"
 #include "TankAimingComponent.h"
-#include "Tank.h"
 
 // Sets default values
 ATank::ATank()
@@ -50,12 +50,14 @@ void ATank::AimAt( FVector AimLocation)
 // Firing
 void ATank::Fire()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Tank is firing"));
+	// UE_LOG(LogTemp, Warning, TEXT("Tank is firing"));
 
 	if(!Barrel) return;
 
-	GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, 
+	auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, 
 		Barrel->GetSocketLocation(FName("Projectile")), 
 		Barrel->GetSocketRotation(FName("Projectile"))
 	);
+
+	Projectile->Launch(ProjectileSpeed);
 }
