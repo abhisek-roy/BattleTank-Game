@@ -34,6 +34,9 @@ public:
 	UFUNCTION( BlueprintCallable, Category = Setup)
 	void Fire();
 
+	UFUNCTION( BlueprintCallable, Category = Setup)
+	void ApplyForce(float Throttle, UStaticMeshComponent* Track);
+
 private:
 	UFUNCTION( BlueprintCallable, Category = Setup)
 	void SetBarrelReference(UStaticMeshComponent* BarrelToSet);
@@ -43,6 +46,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = Setup)
 	TSubclassOf<AProjectile> ProjectileBlueprint;
+
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
+	float MaxTractiveForce = 40000.0f;
 
 	UPROPERTY(EditDefaultsOnly, Category = Firing)
 	float ProjectileSpeed = 4000.0f;

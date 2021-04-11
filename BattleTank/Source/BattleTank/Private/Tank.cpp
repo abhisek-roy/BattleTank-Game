@@ -53,14 +53,26 @@ void ATank::Fire()
 	// UE_LOG(LogTemp, Warning, TEXT("Tank is firing"));
 
 	bool IsReloaded = FPlatformTime::Seconds() > ReloadTime + LastFiredAt;
-	if(Barrel && IsReloaded)
-	{
-		auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, 
-			Barrel->GetSocketLocation(FName("Projectile")), 
-			Barrel->GetSocketRotation(FName("Projectile"))
-		);
+	// if(Barrel && IsReloaded)
+	// {
+	// 	auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, 
+	// 		Barrel->GetSocketLocation(FName("Projectile")), 
+	// 		Barrel->GetSocketRotation(FName("Projectile"))
+	// 	);
 
-		Projectile->Launch(ProjectileSpeed);
-		LastFiredAt = FPlatformTime::Seconds();
-	}
+	// 	Projectile->Launch(ProjectileSpeed);
+	// 	LastFiredAt = FPlatformTime::Seconds();
+	// }
+}
+
+void ATank::ApplyForce(float Throttle, UStaticMeshComponent* Track)
+{
+	if(!Track) return;
+	UE_LOG(LogTemp, Warning, TEXT("%s appling %f throttle."), *Track->GetName(), Throttle);
+
+	Throttle = FMath::Clamp(Throttle, -1.f, 1.f);
+	auto Force = Track->GetForwardVector() * Throttle * MaxTractiveForce;
+	auto Location = Track->GetComponentLocation();
+
+	Track->AddForceAtLocation(Force, Location);
 }
