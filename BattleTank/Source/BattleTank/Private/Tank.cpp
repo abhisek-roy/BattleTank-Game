@@ -5,6 +5,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Projectile.h"
 #include "TankAimingComponent.h"
+#include "TankMovementComponent.h"
 
 // Sets default values
 ATank::ATank()
@@ -14,6 +15,7 @@ ATank::ATank()
 
 	// No need to protect component as constructed in the constructor
 	TankAimingComponent = CreateDefaultSubobject<UTankAimingComponent>(FName("Aiming Component"));
+	TankMovementComponent = CreateDefaultSubobject<UTankMovementComponent>(FName("Movement Component"));
 }
 
 void ATank::SetBarrelReference(UStaticMeshComponent* BarrelToSet)
@@ -53,16 +55,16 @@ void ATank::Fire()
 	// UE_LOG(LogTemp, Warning, TEXT("Tank is firing"));
 
 	bool IsReloaded = FPlatformTime::Seconds() > ReloadTime + LastFiredAt;
-	// if(Barrel && IsReloaded)
-	// {
-	// 	auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, 
-	// 		Barrel->GetSocketLocation(FName("Projectile")), 
-	// 		Barrel->GetSocketRotation(FName("Projectile"))
-	// 	);
+	if(Barrel && IsReloaded)
+	{
+		auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, 
+			Barrel->GetSocketLocation(FName("Projectile")), 
+			Barrel->GetSocketRotation(FName("Projectile"))
+		);
 
-	// 	Projectile->Launch(ProjectileSpeed);
-	// 	LastFiredAt = FPlatformTime::Seconds();
-	// }
+		Projectile->Launch(ProjectileSpeed);
+		LastFiredAt = FPlatformTime::Seconds();
+	}
 }
 
 void ATank::ApplyForce(float Throttle, UStaticMeshComponent* Track)
@@ -76,3 +78,26 @@ void ATank::ApplyForce(float Throttle, UStaticMeshComponent* Track)
 
 	Track->AddForceAtLocation(Force, Location);
 }
+
+void ATank::ApplyForceLeft(float Throttle, UStaticMeshComponent* LeftTrack)
+{
+	if(!LeftTrack) return;
+
+	Throttle = FMath::Clamp(Throttle, -1.f, 1.f);
+	auto Force = LeftTrack->GetForwardVector() * Throttle * MaxTractiveForce;
+	auto Location = LeftTrack->GetComponentLocation();
+
+	LeftTrack->AddForceAtLocation(Force, Location);
+}
+
+void ATank::ApplyForceRight(float Throttle, UStaticMeshComponent* RightTrack)
+{
+	if(!RightTrack) return;
+
+	Throttle = FMath::Clamp(Throttle, -1.f, 1.f);
+	auto Force = RightTrack->GetForwardVector() * Throttle * MaxTractiveForce;
+	auto Location = RightTrack->GetComponentLocation();
+
+	RightTrack->AddForceAtLocation(Force, Location);
+}
+
