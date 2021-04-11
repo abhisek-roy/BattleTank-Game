@@ -41,14 +41,16 @@ private:
 	UFUNCTION( BlueprintCallable, Category = Setup)
 	void SetTurretReference(UStaticMeshComponent* TurretToSet);
 
-	UPROPERTY(EditAnywhere, Category = Firing)
-	float ProjectileSpeed = 4000.0f;
-
-	UPROPERTY(EditAnywhere, Category = Firing)
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
 	TSubclassOf<AProjectile> ProjectileBlueprint;
 
-	float LastFiredAt = 0.f;
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
+	float ProjectileSpeed = 4000.0f;
+
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
 	float ReloadTime = 3.f;
+
+	float LastFiredAt = 0.f;
 
 	UStaticMeshComponent* Barrel;
 };
