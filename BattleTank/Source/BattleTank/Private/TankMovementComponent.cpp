@@ -6,22 +6,37 @@
 
 void UTankMovementComponent::Initialize(UStaticMeshComponent* LeftTrackToSet, UStaticMeshComponent* RightTrackToSet)
 {
-    if (!LeftTrackToSet || !RightTrackToSet) return;
-
     LeftTrack = LeftTrackToSet;
     RightTrack = RightTrackToSet;    
 }
 
 void UTankMovementComponent::IntendToMove(float Throw)
 {
-    Throw = FMath::Clamp(Throw, -1.f, 1.f);
-    
-	UE_LOG(LogTemp, Warning, TEXT("Throw: %f"), Throw);
-	auto LeftForce = LeftTrack->GetForwardVector() * Throw * MaxTractiveForce;
-    auto RightForce = RightTrack->GetForwardVector() * Throw * MaxTractiveForce;
+	UE_LOG(LogTemp, Warning, TEXT("Intend to move"));
+	ApplyThrottleIndividually(Throw, Throw);
+}
+
+void UTankMovementComponent::RotateRight(float Throw)
+{
+    ApplyThrottleIndividually(Throw, -1 * Throw);
+	UE_LOG(LogTemp, Warning, TEXT("RotateRight."));
+}
+
+// Individually apply throttle to the tracks
+void UTankMovementComponent::ApplyThrottleIndividually(float ThrottleLeft, float ThrottleRight)
+{
+	ThrottleLeft = FMath::Clamp(ThrottleLeft, -1.f, 1.f);
+	ThrottleRight = FMath::Clamp(ThrottleRight, -1.f, 1.f);
+    auto LeftForceMag = ThrottleLeft * MaxTractiveForce * 0.8;
+    auto RightForceMag = ThrottleRight * MaxTractiveForce * 0.8;
+	UE_LOG(LogTemp, Warning, TEXT("Apply individually"));
+	
+	UE_LOG(LogTemp, Warning, TEXT("%f, %f."), LeftForceMag, RightForceMag);
+	if (!LeftTrack || !RightTrack) return;
+
+	auto LeftForce = LeftTrack->GetForwardVector() * LeftForceMag;
+	auto RightForce = RightTrack->GetForwardVector() * RightForceMag;
 
 	LeftTrack->AddForceAtLocation(LeftForce, LeftTrack->GetComponentLocation());
     RightTrack->AddForceAtLocation(RightForce, RightTrack->GetComponentLocation());
-
-    UE_LOG(LogTemp, Warning, TEXT("Total force %f."), LeftForce.Size());
 }

@@ -25,6 +25,6 @@ void ATankAIController::Tick( float DeltaTime)
     AITank->AimAt(PlayerPawn->GetActorLocation());
     
     // Fire if ready
-    AITank->Fire();
+    // AITank->Fire();
 }
 

@@ -57,8 +57,6 @@ void ATank::AimAt( FVector AimLocation)
 // Firing
 void ATank::Fire()
 {
-	// UE_LOG(LogTemp, Warning, TEXT("Tank is firing"));
-
 	bool IsReloaded = FPlatformTime::Seconds() > ReloadTime + LastFiredAt;
 	if(Barrel && IsReloaded)
 	{
@@ -70,39 +68,5 @@ void ATank::Fire()
 		Projectile->Launch(ProjectileSpeed);
 		LastFiredAt = FPlatformTime::Seconds();
 	}
-}
-
-void ATank::ApplyForce(float Throttle, UStaticMeshComponent* Track)
-{
-	if(!Track) return;
-
-	Throttle = FMath::Clamp(Throttle, -1.f, 1.f);
-	auto Force = Track->GetForwardVector() * Throttle * MaxTractiveForce;
-	auto Location = Track->GetComponentLocation();
-	// UE_LOG(LogTemp, Warning, TEXT("%s appling %f force."), *Track->GetName(), Force.Size());
-
-	Track->AddForceAtLocation(Force, Location);
-}
-
-void ATank::ApplyForceLeft(float Throttle, UStaticMeshComponent* LeftTrack)
-{
-	if(!LeftTrack) return;
-
-	Throttle = FMath::Clamp(Throttle, -1.f, 1.f);
-	auto Force = LeftTrack->GetForwardVector() * Throttle * MaxTractiveForce;
-	auto Location = LeftTrack->GetComponentLocation();
-
-	LeftTrack->AddForceAtLocation(Force, Location);
-}
-
-void ATank::ApplyForceRight(float Throttle, UStaticMeshComponent* RightTrack)
-{
-	if(!RightTrack) return;
-
-	Throttle = FMath::Clamp(Throttle, -1.f, 1.f);
-	auto Force = RightTrack->GetForwardVector() * Throttle * MaxTractiveForce;
-	auto Location = RightTrack->GetComponentLocation();
-
-	RightTrack->AddForceAtLocation(Force, Location);
 }
 

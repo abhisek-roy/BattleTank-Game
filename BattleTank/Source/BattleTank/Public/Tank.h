@@ -36,15 +36,6 @@ public:
 	UFUNCTION( BlueprintCallable, Category = Setup)
 	void Fire();
 
-	UFUNCTION( BlueprintCallable, Category = Setup)
-	void ApplyForce(float Throttle, UStaticMeshComponent* Track);
-
-	UFUNCTION( BlueprintCallable, Category = Movement)
-	void ApplyForceLeft(float Throttle, UStaticMeshComponent* LeftTrack);
-
-	UFUNCTION( BlueprintCallable, Category = Movement)
-	void ApplyForceRight(float Throttle, UStaticMeshComponent* RightTrack);
-
 private:
 	UFUNCTION( BlueprintCallable, Category = Setup)
 	void SetBarrelReference(UStaticMeshComponent* BarrelToSet);

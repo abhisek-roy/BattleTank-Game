@@ -16,16 +16,25 @@ class BATTLETANK_API UTankMovementComponent : public UNavMovementComponent
 	GENERATED_BODY()
 
 public:
+	// virtual void Tick( float DeltaTime) override;
+	
 	UFUNCTION( BlueprintCallable, Category = Setup)
 	void Initialize(UStaticMeshComponent* LeftTrackToSet, UStaticMeshComponent* RightTrackToSet);
 	
 	UFUNCTION( BlueprintCallable, Category = Movement)
 	void IntendToMove(float Throw);
 
+	UFUNCTION( BlueprintCallable, Category = Movement)
+	void RotateRight(float Throw);
+
+	UFUNCTION( BlueprintCallable, Category = Movement)
+	void ApplyThrottleIndividually(float ThrottleLeft, float ThrottleRight);
+
 	float MaxTractiveForce = 0;
 	
 protected:
 	UStaticMeshComponent* LeftTrack = nullptr; 
 	UStaticMeshComponent* RightTrack = nullptr;
+
 };
 
