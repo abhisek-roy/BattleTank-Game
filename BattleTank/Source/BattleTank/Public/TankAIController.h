@@ -7,7 +7,7 @@
 #include "TankAIController.generated.h"
 
 /**
- * 
+ * Defines the AI Tank behaviour.
  */
 class ATank;
 
@@ -19,6 +19,10 @@ class BATTLETANK_API ATankAIController : public AAIController
 public:
 	virtual void BeginPlay() override;
 	virtual void Tick( float DeltaTime) override;
+
+	// How close can the AI tank get
+	float AcceptanceRadius = 6000;
+
 private:
 	ATank* AITank = nullptr;
 	ATank* PlayerPawn = nullptr;

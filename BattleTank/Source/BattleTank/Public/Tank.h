@@ -11,6 +11,9 @@ class UTankAimingComponent;
 class AProjectile;
 class UTankMovementComponent;
 
+/**
+ * Defines the Tank.
+ */
 UCLASS()
 class BATTLETANK_API ATank : public APawn
 {
@@ -25,6 +28,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY( BlueprintReadOnly, Category = "Setup")
 	UTankAimingComponent* TankAimingComponent = nullptr;
 	UTankMovementComponent* MovementComponent = nullptr;
 

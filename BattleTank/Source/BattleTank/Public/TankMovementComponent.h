@@ -7,17 +7,16 @@
 #include "TankMovementComponent.generated.h"
 
 class UStaticMeshComponent;
+
 /**
- * Fly-by-wire movement components
+ * Fly-by-wire and manual movement components
  */
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BATTLETANK_API UTankMovementComponent : public UNavMovementComponent
 {
 	GENERATED_BODY()
 
-public:
-	// virtual void Tick( float DeltaTime) override;
-	
+public:	
 	UFUNCTION( BlueprintCallable, Category = Setup)
 	void Initialize(UStaticMeshComponent* LeftTrackToSet, UStaticMeshComponent* RightTrackToSet);
 	
@@ -30,11 +29,12 @@ public:
 	UFUNCTION( BlueprintCallable, Category = Movement)
 	void ApplyThrottleIndividually(float ThrottleLeft, float ThrottleRight);
 
+	void RequestDirectMove( const FVector & MoveVelocity, bool bForceMaxSpeed) override;
+
 	float MaxTractiveForce = 0;
 	
 protected:
 	UStaticMeshComponent* LeftTrack = nullptr; 
 	UStaticMeshComponent* RightTrack = nullptr;
-
 };
 

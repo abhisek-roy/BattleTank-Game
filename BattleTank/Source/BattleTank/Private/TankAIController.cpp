@@ -1,7 +1,7 @@
 // Copyright 2021, Abhisek Roy
 
-#include "Tank.h"
 #include "TankAIController.h"
+#include "Tank.h"
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
 
@@ -20,11 +20,12 @@ void ATankAIController::Tick( float DeltaTime)
     if(!PlayerPawn) return;
 
     // Move towards Player
+    MoveToActor(PlayerPawn, AcceptanceRadius);
 
     // Aim towards Player
     AITank->AimAt(PlayerPawn->GetActorLocation());
     
     // Fire if ready
-    // AITank->Fire();
+    AITank->Fire();
 }
 

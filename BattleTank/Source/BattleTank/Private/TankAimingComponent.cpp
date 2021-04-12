@@ -2,9 +2,9 @@
 
 #define OUT
 
+#include "TankAimingComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "TankAimingComponent.h"
 
 // Sets default values for this component's properties
 UTankAimingComponent::UTankAimingComponent()
@@ -118,3 +118,5 @@ void UTankAimingComponent::OrientTurret(float RelSpeed)
     float Yaw = Turret->RelativeRotation.Yaw + RelSpeed * MaxDegreesPerSec * GetWorld()->DeltaTimeSeconds;
     Turret->SetRelativeRotation(FRotator(0, Yaw, 0));	
 	}
+
+	
