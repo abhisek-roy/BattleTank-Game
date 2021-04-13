@@ -6,7 +6,7 @@
 
 void UTankMovementComponent::Initialize(UStaticMeshComponent* LeftTrackToSet, UStaticMeshComponent* RightTrackToSet)
 {
-    if(!LeftTrackToSet || !RightTrackToSet) return;
+    if(!ensure(LeftTrackToSet && RightTrackToSet)) return;
 	LeftTrack = LeftTrackToSet;
     RightTrack = RightTrackToSet;    
 }
@@ -29,7 +29,7 @@ void UTankMovementComponent::ApplyThrottleIndividually(float ThrottleLeft, float
     auto LeftForceMag = ThrottleLeft * MaxTractiveForce * 0.8;
     auto RightForceMag = ThrottleRight * MaxTractiveForce * 0.8;
 
-	if (!LeftTrack || !RightTrack) return;
+	if (!ensure(LeftTrack && RightTrack)) return;
 
 	auto LeftForce = LeftTrack->GetForwardVector() * LeftForceMag;
 	auto RightForce = RightTrack->GetForwardVector() * RightForceMag;

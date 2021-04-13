@@ -13,7 +13,7 @@ ATank::ATank()
 
 void ATank::Initialize(UTankAimingComponent* AimingComponentToSet, UTankMovementComponent* MovementComponentToSet)
 {
-	if( !AimingComponentToSet || !MovementComponentToSet) return;
+	if( !ensure(AimingComponentToSet && MovementComponentToSet ) ) return;
     AimingComponent = AimingComponentToSet;
     MovementComponent = MovementComponentToSet;
 
@@ -33,35 +33,35 @@ void ATank::BeginPlay()
 	Super::BeginPlay();
 
 	// // Sets up Aiming and Movement components, and passes on Tank properties.
-	auto TestAimingComponent = this->FindComponentByClass<UTankAimingComponent>();
-	auto TestMovementComponent = this->FindComponentByClass<UTankMovementComponent>();
+	auto AimingComponent = this->FindComponentByClass<UTankAimingComponent>();
+	auto MovementComponent = this->FindComponentByClass<UTankMovementComponent>();
 
-	if( !TestAimingComponent) UE_LOG(LogTemp, Warning, TEXT("Aiming Comp not found"));
-	 if( !TestMovementComponent) UE_LOG(LogTemp, Warning, TEXT("Move Comp not found"));
+	if( !ensure(AimingComponent)) UE_LOG(LogTemp, Warning, TEXT("Aiming Comp not found"));
+	if( !ensure(MovementComponent)) UE_LOG(LogTemp, Warning, TEXT("Move Comp not found"));
 
-	// if( !AimingComponent || !MovementComponent ) return;
+	if( !ensure(AimingComponent && MovementComponent)) return;
 
-	// // Passing on Tank properties to the respetive controllers
-	// MovementComponent->MaxTractiveForce = MaxTractiveForce;
-	// AimingComponent->ReloadTime = ReloadTime;
-	// AimingComponent->ProjectileSpeed = ProjectileSpeed;
-	// AimingComponent->BarrelMaxDegreesPerSec = BarrelMaxDegreesPerSec;
-	// AimingComponent->MinElevationDeg = MinElevationDeg;
-	// AimingComponent->MaxElevationDeg = MaxElevationDeg;
-	// AimingComponent->TurretMaxDegreesPerSec = TurretMaxDegreesPerSec;
+	// Passing on Tank properties to the respetive controllers
+	MovementComponent->MaxTractiveForce = MaxTractiveForce;
+	AimingComponent->ReloadTime = ReloadTime;
+	AimingComponent->ProjectileSpeed = ProjectileSpeed;
+	AimingComponent->BarrelMaxDegreesPerSec = BarrelMaxDegreesPerSec;
+	AimingComponent->MinElevationDeg = MinElevationDeg;
+	AimingComponent->MaxElevationDeg = MaxElevationDeg;
+	AimingComponent->TurretMaxDegreesPerSec = TurretMaxDegreesPerSec;
 }
 
 // Aiming
 void ATank::AimAt( FVector AimLocation)
 {
-	if(!AimingComponent) return;
+	if(!ensure(AimingComponent)) return;
 	AimingComponent->AimAt(AimLocation);
 }
 
 // Firing
 void ATank::Fire()
 {
-	if(!AimingComponent) return;
+	if(!ensure(AimingComponent)) return;
 	AimingComponent->Fire();
 }
 

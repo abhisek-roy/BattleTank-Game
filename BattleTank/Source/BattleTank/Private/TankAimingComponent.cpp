@@ -19,7 +19,7 @@ UTankAimingComponent::UTankAimingComponent()
 
 void UTankAimingComponent::Initialize(UStaticMeshComponent* BarrelToSet, UStaticMeshComponent* TurretToSet)
 {
-    if(!BarrelToSet || !TurretToSet) return;
+    if(!ensure(BarrelToSet && TurretToSet)) return;
 	Barrel = BarrelToSet;
 	Turret = TurretToSet;    
 }
@@ -32,7 +32,7 @@ void UTankAimingComponent::BeginPlay()
 
 void UTankAimingComponent::AimAt(FVector AimLocation)
 {
-	if(!Barrel) return;
+	if(!ensure(Barrel)) return;
 
 	FVector OutLaunchVelocity;
 	FVector StartLocation = Barrel->GetSocketLocation(FName("Projectile"));
@@ -63,7 +63,7 @@ void UTankAimingComponent::AimAt(FVector AimLocation)
 
 void UTankAimingComponent::MoveBarrelTowards( FVector AimDirection )
 {
-	if(!Barrel) return;
+	if(!ensure(Barrel)) return;
 	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
 	auto AimAsRotator = AimDirection.Rotation();
 	auto DeltaRotator = AimAsRotator - BarrelRotator;
@@ -89,7 +89,7 @@ void UTankAimingComponent::ElevateBarrel(float RelSpeed)
 	// Move the barrel the right about this frame
 	// Given a max elevation speed, and the frame time
     // RelSpeed -1 to +1
-	if(!Barrel) return;
+	if(!ensure(Barrel)) return;
 
     RelSpeed = FMath::Clamp<float>(RelSpeed, -1, 1);
 	float Attitude = Barrel->RelativeRotation.Pitch + RelSpeed * BarrelMaxDegreesPerSec * GetWorld()->DeltaTimeSeconds;
@@ -102,12 +102,12 @@ void UTankAimingComponent::OrientTurret(float RelSpeed)
 	// Move the turret the right about this frame
 	// Given a max rotation speed, and the frame time
     // RelSpeed -1 to +1
-	if(!Turret) return;
+	if(!ensure(Turret)) return;
     RelSpeed = FMath::Clamp<float>(RelSpeed, -1, 1);
     
     float Yaw = Turret->RelativeRotation.Yaw + RelSpeed * TurretMaxDegreesPerSec * GetWorld()->DeltaTimeSeconds;
     Turret->SetRelativeRotation(FRotator(0, Yaw, 0));	
-	}
+}
 
 // Firing
 void UTankAimingComponent::Fire()
