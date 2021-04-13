@@ -1,9 +1,6 @@
 // Copyright 2021, Abhisek Roy
 
 #include "Tank.h"
-#include "Engine/World.h"
-#include "Components/StaticMeshComponent.h"
-#include "Projectile.h"
 #include "TankAimingComponent.h"
 #include "TankMovementComponent.h"
 
@@ -12,27 +9,19 @@ ATank::ATank()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	// No need to protect component as constructed in the constructor
-	TankAimingComponent = CreateDefaultSubobject<UTankAimingComponent>(FName("Aiming Component"));
 }
 
-void ATank::SetBarrelReference(UStaticMeshComponent* BarrelToSet)
+// Sets up Aiming and Movement components, and passes on Tank properties.
+void ATank::Initialize(UTankAimingComponent* AimingComponentToSet, UTankMovementComponent* MovementComponentToSet)
 {
-	TankAimingComponent->SetBarrelReference(BarrelToSet);
-	Barrel = BarrelToSet;
-}
-
-void ATank::SetTurretReference(UStaticMeshComponent* TurretToSet)
-{
-	TankAimingComponent->SetTurretReference(TurretToSet);
-}
-
-void ATank::SetMovementComponentReference(UTankMovementComponent* MovementComponentToSet)
-{
-	if(!MovementComponentToSet) return;
+	if( !AimingComponentToSet || !MovementComponentToSet) return;
+	AimingComponent = AimingComponentToSet;
 	MovementComponent = MovementComponentToSet;
+
+	// Passing on Tank properties to the respetive controllers
 	MovementComponent->MaxTractiveForce = MaxTractiveForce;
+	AimingComponent->ReloadTime = ReloadTime;
+	AimingComponent->ProjectileSpeed = ProjectileSpeed;
 }
 
 // Called when the game starts or when spawned
@@ -41,32 +30,15 @@ void ATank::BeginPlay()
 	Super::BeginPlay();
 }
 
-// Called to bind functionality to input
-void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-}
-
 // Aiming
 void ATank::AimAt( FVector AimLocation)
 {
-	TankAimingComponent->AimAt(AimLocation, ProjectileSpeed);
+	AimingComponent->AimAt(AimLocation);
 }
 
 // Firing
 void ATank::Fire()
 {
-	bool IsReloaded = FPlatformTime::Seconds() > ReloadTime + LastFiredAt;
-	if(Barrel && IsReloaded)
-	{
-		auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, 
-			Barrel->GetSocketLocation(FName("Projectile")), 
-			Barrel->GetSocketRotation(FName("Projectile"))
-		);
-
-		Projectile->Launch(ProjectileSpeed);
-		LastFiredAt = FPlatformTime::Seconds();
-	}
+	AimingComponent->Fire();
 }
 

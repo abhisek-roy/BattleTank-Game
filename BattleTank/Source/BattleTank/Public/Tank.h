@@ -8,11 +8,10 @@
 
 // Forward Declarations
 class UTankAimingComponent;
-class AProjectile;
 class UTankMovementComponent;
 
 /**
- * Defines the Tank.
+ * Defines the Tank and its properties
  */
 UCLASS()
 class BATTLETANK_API ATank : public APawn
@@ -24,45 +23,28 @@ public:
 	ATank();
 	void AimAt( FVector AimLocation);
 
+	UFUNCTION( BlueprintCallable, Category = Setup)
+	void Fire();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY( BlueprintReadOnly, Category = "Setup")
-	UTankAimingComponent* TankAimingComponent = nullptr;
+	UPROPERTY(BlueprintReadOnly)
+	UTankAimingComponent* AimingComponent = nullptr;
+	UPROPERTY(BlueprintReadOnly)
 	UTankMovementComponent* MovementComponent = nullptr;
-
-public:	
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	UFUNCTION( BlueprintCallable, Category = Setup)
-	void Fire();
 
 private:
 	UFUNCTION( BlueprintCallable, Category = Setup)
-	void SetBarrelReference(UStaticMeshComponent* BarrelToSet);
-
-	UFUNCTION( BlueprintCallable, Category = Setup)
-	void SetTurretReference(UStaticMeshComponent* TurretToSet);
-
-	UFUNCTION( BlueprintCallable, Category = Setup)
-	void SetMovementComponentReference(UTankMovementComponent* MovementComponentToSet);
-
-	UPROPERTY(EditDefaultsOnly, Category = Setup)
-	TSubclassOf<AProjectile> ProjectileBlueprint;
+	void Initialize(UTankAimingComponent* AimingComponentToSet, UTankMovementComponent* MovementComponentToSet);
 
 	UPROPERTY(EditDefaultsOnly, Category = Movement)
 	float MaxTractiveForce = 30000000.0f;
 
 	UPROPERTY(EditDefaultsOnly, Category = Firing)
 	float ProjectileSpeed = 4000.0f;
-
+	
 	UPROPERTY(EditDefaultsOnly, Category = Firing)
 	float ReloadTime = 3.f;
-
-	float LastFiredAt = 0.f;
-
-	UStaticMeshComponent* Barrel;
 };

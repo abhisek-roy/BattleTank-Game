@@ -14,6 +14,11 @@ enum class EFiringState : uint8
 	Locked
 };
 
+class AProjectile;
+
+/**
+ * Auto-aiming components
+ */
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BATTLETANK_API UTankAimingComponent : public UActorComponent
 {
@@ -23,9 +28,15 @@ public:
 	// Sets default values for this component's properties
 	UTankAimingComponent();
 
-	void AimAt(FVector AimLocation, float ProjectileSpeed);
-	void SetBarrelReference(UStaticMeshComponent* BarrelToSet);
-	void SetTurretReference(UStaticMeshComponent* TurretToSet);
+	float ReloadTime;
+	float ProjectileSpeed;
+
+	void AimAt(FVector AimLocation);
+	
+	UFUNCTION( BlueprintCallable, Category = Setup)
+	void Initialize(UStaticMeshComponent* BarrelToSet, UStaticMeshComponent* TurretToSet);
+	
+	void Fire();
 
 protected:
 	// Called when the game starts
@@ -33,11 +44,17 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Firing")
 	EFiringState FiringState = EFiringState::Reloading;
-public:
 
 private:
 	UStaticMeshComponent* Barrel = nullptr;
 	UStaticMeshComponent* Turret = nullptr;
+
+
+	float LastFiredAt = 0.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
+	TSubclassOf<AProjectile> ProjectileBlueprint = nullptr;
+
 
 	void MoveBarrelTowards(FVector AimDirection);
 	void ElevateBarrel(float RelSpeed);
