@@ -6,7 +6,8 @@
 
 void UTankMovementComponent::Initialize(UStaticMeshComponent* LeftTrackToSet, UStaticMeshComponent* RightTrackToSet)
 {
-    LeftTrack = LeftTrackToSet;
+    if(!LeftTrackToSet || !RightTrackToSet) return;
+	LeftTrack = LeftTrackToSet;
     RightTrack = RightTrackToSet;    
 }
 

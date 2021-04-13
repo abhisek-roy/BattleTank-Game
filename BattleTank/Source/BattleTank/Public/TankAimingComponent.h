@@ -30,6 +30,10 @@ public:
 
 	float ReloadTime;
 	float ProjectileSpeed;
+	float BarrelMaxDegreesPerSec;
+	float MinElevationDeg;
+	float MaxElevationDeg;
+	float TurretMaxDegreesPerSec;
 
 	void AimAt(FVector AimLocation);
 	
@@ -43,7 +47,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Firing")
-	EFiringState FiringState = EFiringState::Reloading;
+	EFiringState FiringState = EFiringState::Aiming;
 
 private:
 	UStaticMeshComponent* Barrel = nullptr;

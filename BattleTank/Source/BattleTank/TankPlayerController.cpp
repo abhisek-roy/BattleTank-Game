@@ -3,13 +3,19 @@
 #include "TankPlayerController.h"
 #include "Engine/World.h"
 #include "Tank.h"
+#include "TankAimingComponent.h"
 
 void ATankPlayerController::BeginPlay()
 {
     Super::BeginPlay();
 
     ATank* PawnTank = GetControlledTank();
+
     if(!PawnTank) return;
+    auto AimingComponent = PawnTank->FindComponentByClass<UTankAimingComponent>();
+
+    if (AimingComponent) FoundAimingComponent(AimingComponent);
+
 }
 
 ATank* ATankPlayerController::GetControlledTank() const

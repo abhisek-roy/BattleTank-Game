@@ -63,10 +63,6 @@ void UTankAimingComponent::AimAt(FVector AimLocation)
 
 void UTankAimingComponent::MoveBarrelTowards( FVector AimDirection )
 {
-	// Convert AimDirection to Polar Coordinates
-	// Get Barrel reference
-	
-	// Find the differences between current barrel rotation and aimdirection
 	if(!Barrel) return;
 	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
 	auto AimAsRotator = AimDirection.Rotation();
@@ -93,32 +89,33 @@ void UTankAimingComponent::ElevateBarrel(float RelSpeed)
 	// Move the barrel the right about this frame
 	// Given a max elevation speed, and the frame time
     // RelSpeed -1 to +1
-	float MaxDegreesPerSec = 5.f;
-	float MinElevationDeg = 5.f;
-	float MaxElevationDeg = 40.f;
+	if(!Barrel) return;
 
     RelSpeed = FMath::Clamp<float>(RelSpeed, -1, 1);
-	float Attitude = Barrel->RelativeRotation.Pitch + RelSpeed * 5.0f * GetWorld()->DeltaTimeSeconds;
+	float Attitude = Barrel->RelativeRotation.Pitch + RelSpeed * BarrelMaxDegreesPerSec * GetWorld()->DeltaTimeSeconds;
     Attitude = FMath::Clamp<float>(Attitude, 0.f, 40.f);
     Barrel->SetRelativeRotation(FRotator(Attitude, 0,0));
 }
 
 void UTankAimingComponent::OrientTurret(float RelSpeed)
 {
-	float MaxDegreesPerSec = 15.f;
-	// Move the barrel the right about this frame
-	// Given a max elevation speed, and the frame time
+	// Move the turret the right about this frame
+	// Given a max rotation speed, and the frame time
     // RelSpeed -1 to +1
+	if(!Turret) return;
     RelSpeed = FMath::Clamp<float>(RelSpeed, -1, 1);
     
-    float Yaw = Turret->RelativeRotation.Yaw + RelSpeed * MaxDegreesPerSec * GetWorld()->DeltaTimeSeconds;
+    float Yaw = Turret->RelativeRotation.Yaw + RelSpeed * TurretMaxDegreesPerSec * GetWorld()->DeltaTimeSeconds;
     Turret->SetRelativeRotation(FRotator(0, Yaw, 0));	
 	}
 
 // Firing
 void UTankAimingComponent::Fire()
 {
+	if(!ProjectileBlueprint) UE_LOG(LogTemp, Error, TEXT("Projectile BLueprint not set.")); 
+	
 	bool IsReloaded = FPlatformTime::Seconds() > ReloadTime + LastFiredAt;
+
 	if(Barrel && IsReloaded && ProjectileBlueprint)
 	{
 		auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, 
@@ -130,4 +127,3 @@ void UTankAimingComponent::Fire()
 		LastFiredAt = FPlatformTime::Seconds();
 	}
 }
-	
