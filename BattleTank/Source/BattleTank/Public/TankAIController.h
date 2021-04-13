@@ -6,11 +6,11 @@
 #include "AIController.h"
 #include "TankAIController.generated.h"
 
+class UTankAimingComponent;
+
 /**
  * Defines the AI Tank behaviour.
  */
-class ATank;
-
 UCLASS()
 class BATTLETANK_API ATankAIController : public AAIController
 {
@@ -24,6 +24,5 @@ public:
 	float AcceptanceRadius = 6000;
 
 private:
-	ATank* AITank = nullptr;
-	ATank* PlayerPawn = nullptr;
+	UTankAimingComponent* AimingComponent;
 };

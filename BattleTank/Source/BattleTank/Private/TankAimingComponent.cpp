@@ -116,7 +116,7 @@ void UTankAimingComponent::Fire()
 	
 	bool IsReloaded = FPlatformTime::Seconds() > ReloadTime + LastFiredAt;
 
-	if(Barrel && IsReloaded && ProjectileBlueprint)
+	if(ensure(Barrel) && IsReloaded && ensure(ProjectileBlueprint))
 	{
 		auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, 
 			Barrel->GetSocketLocation(FName("Projectile")), 

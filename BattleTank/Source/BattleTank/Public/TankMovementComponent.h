@@ -17,6 +17,7 @@ class BATTLETANK_API UTankMovementComponent : public UNavMovementComponent
 	GENERATED_BODY()
 
 public:	
+	// Sets left track and right track reference
 	UFUNCTION( BlueprintCallable, Category = Setup)
 	void Initialize(UStaticMeshComponent* LeftTrackToSet, UStaticMeshComponent* RightTrackToSet);
 	

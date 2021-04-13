@@ -6,10 +6,6 @@
 #include "GameFramework/Pawn.h"
 #include "Tank.generated.h"
 
-// Forward Declarations
-class UTankAimingComponent;
-class UTankMovementComponent;
-
 /**
  * Defines the Tank and its properties
  */
@@ -21,25 +17,12 @@ class BATTLETANK_API ATank : public APawn
 public:
 	// Sets default values for this pawn's properties
 	ATank();
-	void AimAt( FVector AimLocation);
-
-	UFUNCTION( BlueprintCallable, Category = Setup)
-	void Fire();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(BlueprintReadOnly)
-	UTankAimingComponent* AimingComponent = nullptr;
-
-	UPROPERTY(BlueprintReadOnly)
-	UTankMovementComponent* MovementComponent = nullptr;
-
 private:
-	UFUNCTION( BlueprintCallable, Category = Setup)
-	void Initialize(UTankAimingComponent* AimingComponentToSet, UTankMovementComponent* MovementComponentToSet);
-
 	UPROPERTY(EditDefaultsOnly, Category = Movement)
 	float MaxTractiveForce = 30000000.0f;
 

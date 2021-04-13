@@ -37,9 +37,10 @@ public:
 
 	void AimAt(FVector AimLocation);
 	
-	UFUNCTION( BlueprintCallable, Category = Setup)
+	UFUNCTION( BlueprintCallable, Category = "Setup")
 	void Initialize(UStaticMeshComponent* BarrelToSet, UStaticMeshComponent* TurretToSet);
 	
+	UFUNCTION( BlueprintCallable, Category = "Setup")
 	void Fire();
 
 protected:

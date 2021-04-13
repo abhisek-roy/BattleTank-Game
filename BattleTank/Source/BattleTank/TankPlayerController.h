@@ -7,10 +7,9 @@
 #include "TankPlayerController.generated.h" // Always the last one
 
 /**
- * 
+ *  This Player controller helps with auto aiming
  */
 
-class ATank;
 class UTankAimingComponent;
 
 UCLASS()
@@ -26,8 +25,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 protected:
-	UFUNCTION( BlueprintCallable, Category = "Setup")
-	ATank* GetControlledTank() const;
 	
 	UFUNCTION(BlueprintImplementableEvent, Category = "Setup")
 	void FoundAimingComponent(UTankAimingComponent* AimCompRef);
@@ -41,6 +38,8 @@ private:
 
     UPROPERTY(EditDefaultsOnly)
     float CrossHairYLocation = 0.29f;
+
+	UTankAimingComponent* AimingComponent;
 
 	void AimTowardsCrosshair();
 	bool GetSightRayHitLocation( FVector& HitLocation) const;
