@@ -15,21 +15,4 @@ ATank::ATank()
 void ATank::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// Sets up Aiming and Movement components, and passes on Tank properties.
-	auto AimingComponent = this->FindComponentByClass<UTankAimingComponent>();
-	auto MovementComponent = this->FindComponentByClass<UTankMovementComponent>();
-
-	if( !ensure(AimingComponent)) return;
-	if( !ensure(MovementComponent)) return;
-
-	// Passing on Tank properties to the respetive controllers
-	MovementComponent->MaxTractiveForce = MaxTractiveForce;
-	AimingComponent->ReloadTime = ReloadTime;
-	AimingComponent->ProjectileSpeed = ProjectileSpeed;
-	AimingComponent->BarrelMaxDegreesPerSec = BarrelMaxDegreesPerSec;
-	AimingComponent->MinElevationDeg = MinElevationDeg;
-	AimingComponent->MaxElevationDeg = MaxElevationDeg;
-	AimingComponent->TurretMaxDegreesPerSec = TurretMaxDegreesPerSec;
 }
-

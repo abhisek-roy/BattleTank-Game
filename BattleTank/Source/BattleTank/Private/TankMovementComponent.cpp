@@ -41,7 +41,6 @@ void UTankMovementComponent::ApplyThrottleIndividually(float ThrottleLeft, float
 void UTankMovementComponent::RequestDirectMove( const FVector & MoveVelocity, bool bForceMaxSpeed)
 {
 	// No need to call Super as we're replacing the functionality from the Engine code
-	auto TankName = GetOwner()->GetName();
 	auto AIMoveIntention = MoveVelocity.GetSafeNormal();
 	auto FaceDirection = GetOwner()->GetActorForwardVector().GetSafeNormal();
 

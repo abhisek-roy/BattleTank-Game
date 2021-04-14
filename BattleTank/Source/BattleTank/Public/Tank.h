@@ -23,24 +23,4 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
-	UPROPERTY(EditDefaultsOnly, Category = Movement)
-	float MaxTractiveForce = 30000000.0f;
-
-	UPROPERTY(EditDefaultsOnly, Category = Firing)
-	float ProjectileSpeed = 4000.0f;
-	
-	UPROPERTY(EditDefaultsOnly, Category = Firing)
-	float ReloadTime = 3.f;
-
-	UPROPERTY(EditDefaultsOnly, Category = Firing)
-	float BarrelMaxDegreesPerSec = 5.f;
-	
-	UPROPERTY(EditDefaultsOnly, Category = Firing)
-	float MinElevationDeg = 5.f;
-	
-	UPROPERTY(EditDefaultsOnly, Category = Firing)
-	float MaxElevationDeg = 40.f;
-	
-	UPROPERTY(EditDefaultsOnly, Category = Firing)
-	float TurretMaxDegreesPerSec = 15.f;
 };

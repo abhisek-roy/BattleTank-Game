@@ -6,11 +6,11 @@
 #include "GameFramework/PlayerController.h"
 #include "TankPlayerController.generated.h" // Always the last one
 
+class UTankAimingComponent;
+
 /**
  *  This Player controller helps with auto aiming
  */
-
-class UTankAimingComponent;
 
 UCLASS()
 class BATTLETANK_API ATankPlayerController : public APlayerController
@@ -39,7 +39,7 @@ private:
     UPROPERTY(EditDefaultsOnly)
     float CrossHairYLocation = 0.29f;
 
-	UTankAimingComponent* AimingComponent;
+	// UTankAimingComponent* AimingComponent;
 
 	void AimTowardsCrosshair();
 	bool GetSightRayHitLocation( FVector& HitLocation) const;

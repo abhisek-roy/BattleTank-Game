@@ -31,11 +31,12 @@ public:
 	void ApplyThrottleIndividually(float ThrottleLeft, float ThrottleRight);
 
 	void RequestDirectMove( const FVector & MoveVelocity, bool bForceMaxSpeed) override;
-
-	float MaxTractiveForce = 0;
 	
 protected:
 	UStaticMeshComponent* LeftTrack = nullptr; 
 	UStaticMeshComponent* RightTrack = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = Movement)
+	float MaxTractiveForce = 30000000.0f;
 };
 

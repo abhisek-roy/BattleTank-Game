@@ -28,13 +28,6 @@ public:
 	// Sets default values for this component's properties
 	UTankAimingComponent();
 
-	float ReloadTime;
-	float ProjectileSpeed;
-	float BarrelMaxDegreesPerSec;
-	float MinElevationDeg;
-	float MaxElevationDeg;
-	float TurretMaxDegreesPerSec;
-
 	void AimAt(FVector AimLocation);
 	
 	UFUNCTION( BlueprintCallable, Category = "Setup")
@@ -51,18 +44,34 @@ protected:
 	EFiringState FiringState = EFiringState::Aiming;
 
 private:
-	UStaticMeshComponent* Barrel = nullptr;
-	UStaticMeshComponent* Turret = nullptr;
-
-
-	float LastFiredAt = 0.f;
-
-	UPROPERTY(EditDefaultsOnly, Category = Setup)
-	TSubclassOf<AProjectile> ProjectileBlueprint = nullptr;
-
 
 	void MoveBarrelTowards(FVector AimDirection);
 	void ElevateBarrel(float RelSpeed);
 	void OrientTurret(float RelSpeed);
 
+	UStaticMeshComponent* Barrel = nullptr;
+	UStaticMeshComponent* Turret = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
+	float ProjectileSpeed = 4000.0f;
+	
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
+	float ReloadTime = 3.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
+	float BarrelMaxDegreesPerSec = 5.f;
+	
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
+	float MinElevationDeg = 5.f;
+	
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
+	float MaxElevationDeg = 40.f;
+	
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
+	float TurretMaxDegreesPerSec = 15.f;
+
+	float LastFiredAt = 0.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
+	TSubclassOf<AProjectile> ProjectileBlueprint = nullptr;
 };
