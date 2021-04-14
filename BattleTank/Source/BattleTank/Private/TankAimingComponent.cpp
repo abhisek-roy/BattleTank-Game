@@ -12,7 +12,7 @@ UTankAimingComponent::UTankAimingComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = false;
+	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
 }
@@ -28,6 +28,29 @@ void UTankAimingComponent::Initialize(UStaticMeshComponent* BarrelToSet, UStatic
 void UTankAimingComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	LastFiredAt = FPlatformTime::Seconds();
+}
+
+void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
+{
+	if( FPlatformTime::Seconds() < ReloadTime + LastFiredAt)
+	{
+		FiringState = EFiringState::Reloading;
+	}else if (IsLocked())
+	{
+		FiringState = EFiringState::Locked;
+	}else
+	{
+		FiringState = EFiringState::Aiming;
+	}
+}
+
+bool UTankAimingComponent::IsLocked()
+{
+	if (!ensure(Barrel)) return false;
+
+	auto BarrelRotator = Barrel->GetForwardVector();
+	return BarrelRotator.Equals( AimDirection , 0.01);
 }
 
 void UTankAimingComponent::AimAt(FVector AimLocation)
@@ -36,7 +59,6 @@ void UTankAimingComponent::AimAt(FVector AimLocation)
 
 	FVector OutLaunchVelocity;
 	FVector StartLocation = Barrel->GetSocketLocation(FName("Projectile"));
-	FVector AimDirection(0);
 	TArray < AActor * > ActorsToIgnore = {Cast<AActor>(Barrel)}; // Not sure of the right usage.
 	bool HasValidSol = UGameplayStatics::SuggestProjectileVelocity(
 		this,
@@ -59,7 +81,6 @@ void UTankAimingComponent::AimAt(FVector AimLocation)
 		MoveBarrelTowards(AimDirection);
 	}
 }
-
 
 void UTankAimingComponent::MoveBarrelTowards( FVector AimDirection )
 {
@@ -113,10 +134,8 @@ void UTankAimingComponent::OrientTurret(float RelSpeed)
 void UTankAimingComponent::Fire()
 {
 	if(!ProjectileBlueprint) UE_LOG(LogTemp, Error, TEXT("Projectile BLueprint not set.")); 
-	
-	bool IsReloaded = FPlatformTime::Seconds() > ReloadTime + LastFiredAt;
 
-	if(ensure(Barrel) && IsReloaded && ensure(ProjectileBlueprint))
+	if(ensure(Barrel) && ensure(ProjectileBlueprint) && FiringState != EFiringState::Reloading)
 	{
 		auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, 
 			Barrel->GetSocketLocation(FName("Projectile")), 

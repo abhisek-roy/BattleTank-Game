@@ -45,9 +45,12 @@ protected:
 
 private:
 
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
+	
 	void MoveBarrelTowards(FVector AimDirection);
 	void ElevateBarrel(float RelSpeed);
 	void OrientTurret(float RelSpeed);
+	bool IsLocked();
 
 	UStaticMeshComponent* Barrel = nullptr;
 	UStaticMeshComponent* Turret = nullptr;
@@ -71,6 +74,7 @@ private:
 	float TurretMaxDegreesPerSec = 15.f;
 
 	float LastFiredAt = 0.f;
+	FVector AimDirection = FVector(0);
 
 	UPROPERTY(EditDefaultsOnly, Category = Setup)
 	TSubclassOf<AProjectile> ProjectileBlueprint = nullptr;
