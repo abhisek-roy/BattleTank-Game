@@ -113,7 +113,7 @@ void UTankAimingComponent::ElevateBarrel(float RelSpeed)
 	if(!ensure(Barrel)) return;
 
     RelSpeed = FMath::Clamp<float>(RelSpeed, -1, 1);
-	float Attitude = Barrel->RelativeRotation.Pitch + RelSpeed * BarrelMaxDegreesPerSec * GetWorld()->DeltaTimeSeconds;
+	float Attitude = Barrel->GetRelativeRotation().Pitch + RelSpeed * BarrelMaxDegreesPerSec * GetWorld()->DeltaTimeSeconds;
     Attitude = FMath::Clamp<float>(Attitude, 0.f, 40.f);
     Barrel->SetRelativeRotation(FRotator(Attitude, 0,0));
 }
@@ -126,7 +126,7 @@ void UTankAimingComponent::OrientTurret(float RelSpeed)
 	if(!ensure(Turret)) return;
     RelSpeed = FMath::Clamp<float>(RelSpeed, -1, 1);
     
-    float Yaw = Turret->RelativeRotation.Yaw + RelSpeed * TurretMaxDegreesPerSec * GetWorld()->DeltaTimeSeconds;
+    float Yaw = Turret->GetRelativeRotation().Yaw + RelSpeed * TurretMaxDegreesPerSec * GetWorld()->DeltaTimeSeconds;
     Turret->SetRelativeRotation(FRotator(0, Yaw, 0));	
 }
 
