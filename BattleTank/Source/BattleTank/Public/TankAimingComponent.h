@@ -11,7 +11,8 @@ enum class EFiringState : uint8
 {
 	Reloading,
 	Aiming,
-	Locked
+	Locked,
+	OutOfAmmo
 };
 
 class AProjectile;
@@ -42,6 +43,9 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	UPROPERTY(BlueprintReadOnly)
+	int CurrentAmmo;
+
 	UPROPERTY(BlueprintReadOnly, Category = "Firing")
 	EFiringState FiringState = EFiringState::Aiming;
 
@@ -57,13 +61,16 @@ private:
 	UStaticMeshComponent* Barrel = nullptr;
 	UStaticMeshComponent* Turret = nullptr;
 
-	UPROPERTY(EditDefaultsOnly, Category = Firing)
+	UPROPERTY(EditDefaultsOnly, Category = Firing, meta = (ClampMin = "0", ClampMax = "300", UIMin = "0", UIMax = "300"))
+	int TotalAmmo = 3;
+	
+	UPROPERTY(EditDefaultsOnly, Category = Firing, meta = (ClampMin = "0.0", ClampMax = "10000", UIMin = "0.0", UIMax = "10000"))
 	float ProjectileSpeed = 4000.0f;
 	
-	UPROPERTY(EditDefaultsOnly, Category = Firing)
+	UPROPERTY(EditDefaultsOnly, Category = Firing, meta = (ClampMin = "0.0", UIMin = "0.0"))
 	float ReloadTime = 3.f;
 
-	UPROPERTY(EditDefaultsOnly, Category = Firing)
+	UPROPERTY(EditDefaultsOnly, Category = Firing, meta = (ClampMin = "0.0", ClampMax = "30", UIMin = "0.0", UIMax = "30"))
 	float BarrelMaxDegreesPerSec = 5.f;
 	
 	UPROPERTY(EditDefaultsOnly, Category = Firing)

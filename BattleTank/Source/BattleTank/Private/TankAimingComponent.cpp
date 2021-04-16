@@ -29,11 +29,15 @@ void UTankAimingComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	LastFiredAt = FPlatformTime::Seconds();
+	CurrentAmmo = TotalAmmo;
 }
 
 void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
-	if( FPlatformTime::Seconds() < ReloadTime + LastFiredAt)
+	if( CurrentAmmo < 1 )
+	{
+		FiringState = EFiringState::OutOfAmmo;
+	}else if( FPlatformTime::Seconds() < ReloadTime + LastFiredAt)
 	{
 		FiringState = EFiringState::Reloading;
 	}else if (IsLocked())
@@ -140,7 +144,7 @@ void UTankAimingComponent::Fire()
 {
 	if(!ProjectileBlueprint) UE_LOG(LogTemp, Error, TEXT("Projectile BLueprint not set.")); 
 
-	if(ensure(Barrel) && ensure(ProjectileBlueprint) && FiringState != EFiringState::Reloading)
+	if(ensure(Barrel) && ensure(ProjectileBlueprint) && FiringState != EFiringState::Reloading && CurrentAmmo > 0)
 	{
 		auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, 
 			Barrel->GetSocketLocation(FName("Projectile")), 
@@ -149,5 +153,6 @@ void UTankAimingComponent::Fire()
 
 		Projectile->Launch(ProjectileSpeed);
 		LastFiredAt = FPlatformTime::Seconds();
+		CurrentAmmo--;
 	}
 }

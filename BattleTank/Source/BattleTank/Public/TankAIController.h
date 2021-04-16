@@ -22,7 +22,7 @@ public:
 
 	// How close can the AI tank get
 	UPROPERTY(EditDefaultsOnly, Category = "Tuning", meta = (ClampMin = "0.0", ClampMax = "10000", UIMin = "0.0", UIMax = "10000"))
-	float AcceptanceRadius = 6000;
+	float AcceptanceRadius = 8000;
 
 private:
 	UTankAimingComponent* AimingComponent;
