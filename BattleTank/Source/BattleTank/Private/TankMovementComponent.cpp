@@ -7,7 +7,7 @@ void UTankMovementComponent::Initialize(UStaticMeshComponent* LeftTrackToSet, US
 {
     if(!ensure(LeftTrackToSet && RightTrackToSet)) return;
 	LeftTrack = LeftTrackToSet;
-    RightTrack = RightTrackToSet;    
+    RightTrack = RightTrackToSet;
 }
 
 void UTankMovementComponent::IntendToMove(float Throw)

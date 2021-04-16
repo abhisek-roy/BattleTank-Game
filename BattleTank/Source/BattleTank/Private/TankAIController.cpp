@@ -22,7 +22,8 @@ void ATankAIController::Tick( float DeltaTime)
     // Aim towards Player
     AimingComponent->AimAt(GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation());
     
-    // Fire if ready
-    AimingComponent->Fire();
+    // Fire if ready i.e. locked
+    if( AimingComponent->GetFiringState() == EFiringState::Locked )
+        AimingComponent->Fire();
 }
 
