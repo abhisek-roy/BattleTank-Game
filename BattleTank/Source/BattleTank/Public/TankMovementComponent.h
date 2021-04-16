@@ -28,7 +28,10 @@ public:
 	void RotateRight(float Throw);
 
 	UFUNCTION( BlueprintCallable, Category = Movement)
-	void ApplyThrottleIndividually(float ThrottleLeft, float ThrottleRight);
+	void ActuateLeft();
+
+	UFUNCTION(BlueprintCallable, Category = Movement)
+	void ActuateRight();
 
 	void RequestDirectMove( const FVector & MoveVelocity, bool bForceMaxSpeed) override;
 	
@@ -37,14 +40,11 @@ protected:
 	UStaticMeshComponent* RightTrack = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Category = Movement)
-	float MaxTractiveForce = 30000000.0f;
+	float MaxTractiveForce = 50000000.0f;
 	
-	UTankMovementComponent();
-	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
-
 private:
-	FVector LeftForce = FVector(0);
-	FVector RightForce = FVector(0);
+	float ForwardForce = 0;
+	float RotateForce = 0;
 
 	// Rear Bias, Front Bias = 1 - Bias value
 	UPROPERTY(EditDefaultsOnly, Category = "Tuning", meta = (ClampMin = "0.0", ClampMax = "0.99", UIMin = "0.0", UIMax = "0.99"))
@@ -53,5 +53,7 @@ private:
 	float CGHeight = 100.f;
 	UPROPERTY(EditDefaultsOnly, Category = "Tuning", meta = (ClampMin = "0.0", ClampMax = "300", UIMin = "0.0", UIMax = "300"))
 	float CGOffset = 200.f;
+
+	void ApplySidewaysForce();
 };
 
