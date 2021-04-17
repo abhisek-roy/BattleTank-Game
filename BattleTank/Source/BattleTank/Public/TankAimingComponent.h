@@ -44,7 +44,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(BlueprintReadOnly)
-	int CurrentAmmo;
+	int32 CurrentAmmo;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Firing")
 	EFiringState FiringState = EFiringState::Aiming;
@@ -62,7 +62,7 @@ private:
 	UStaticMeshComponent* Turret = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Category = Firing, meta = (ClampMin = "0", ClampMax = "300", UIMin = "0", UIMax = "300"))
-	int TotalAmmo = 3;
+	int32 TotalAmmo = 3;
 	
 	UPROPERTY(EditDefaultsOnly, Category = Firing, meta = (ClampMin = "0.0", ClampMax = "10000", UIMin = "0.0", UIMax = "10000"))
 	float ProjectileSpeed = 4000.0f;

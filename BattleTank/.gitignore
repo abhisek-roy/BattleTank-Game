@@ -1,6 +1,3 @@
-# Ignore additional Contents
-Content/StarterContent/*
-
 # Visual Studio Code
 .vscode
 *.code-workspace
