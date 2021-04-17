@@ -9,6 +9,7 @@
 class UProjectileMovementComponent;
 class UStaticMeshComponent;
 class UParticleSystemComponent;
+class URadialForceComponent;
 
 UCLASS()
 class BATTLETANK_API AProjectile : public AActor
@@ -40,6 +41,15 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Component")
 	UStaticMeshComponent* CollisionMesh = nullptr;
 
+	UPROPERTY(VisibleAnywhere, Category = "Component")
+	URadialForceComponent* BlastForce = nullptr;
+
+	// Destroy Projectile after
+	UPROPERTY(EditDefaultsOnly, Category = "Setup", meta = (ClampMin = "0.0", UIMin = "0.0"))
+	float ProjectileLife = 5.f;
+
 	UFUNCTION()    
     void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+	void DestroyProjectile();
 };

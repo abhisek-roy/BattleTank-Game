@@ -3,6 +3,7 @@
 #include "Projectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "PhysicsEngine/RadialForceComponent.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -25,6 +26,10 @@ AProjectile::AProjectile()
 	ImpactBlast = CreateDefaultSubobject<UParticleSystemComponent>(FName("Impact Blast"));
 	ImpactBlast->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	ImpactBlast->bAutoActivate = false;
+
+	BlastForce = CreateDefaultSubobject<URadialForceComponent>(FName("Blast Force"));
+	BlastForce->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	BlastForce->bAutoActivate = false;
 
 }
 
@@ -50,12 +55,19 @@ void AProjectile::Launch(float Speed)
 
 void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	
-	////////////// UE_LOG ////////////////
-	auto Time = GetWorld()->GetRealTimeSeconds();
-	UE_LOG(LogTemp, Warning, TEXT("%f: Projectile hits!"), Time);
-
 	ImpactBlast->Activate();
 	CollisionMesh->SetVisibility(false);
 	LaunchBlast->Deactivate();
+	BlastForce->FireImpulse();
+
+	SetRootComponent(ImpactBlast);
+	CollisionMesh->DestroyComponent();
+
+	FTimerHandle ProjectileDestroyTimer;
+	GetWorld()->GetTimerManager().SetTimer(ProjectileDestroyTimer ,this, &AProjectile::DestroyProjectile, ProjectileLife, false);
+}
+
+void AProjectile::DestroyProjectile()
+{
+	Destroy();
 }
