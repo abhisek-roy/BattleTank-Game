@@ -48,6 +48,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup", meta = (ClampMin = "0.0", UIMin = "0.0"))
 	float ProjectileLife = 5.f;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Setup", meta = (ClampMin = "0.0", UIMin = "0.0"))
+	float ProjectileDamage = 20.f;
+
 	UFUNCTION()    
     void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
