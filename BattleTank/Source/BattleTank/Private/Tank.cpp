@@ -15,6 +15,7 @@ ATank::ATank()
 void ATank::BeginPlay()
 {
 	Super::BeginPlay();
+	CurrentHealth = StartingHealth;
 }
 
 float ATank::TakeDamage(float DamageAmount, struct FDamageEvent const & DamageEvent, class AController * EventInstigator, AActor * DamageCauser)
@@ -25,7 +26,8 @@ float ATank::TakeDamage(float DamageAmount, struct FDamageEvent const & DamageEv
 	CurrentHealth -= DamageToApply;
 	if (CurrentHealth <= 0)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Tank died"))
+		// Broadcast Tank Death
+		OnDeath.Broadcast();
 	}
 	return DamageToApply;
 }

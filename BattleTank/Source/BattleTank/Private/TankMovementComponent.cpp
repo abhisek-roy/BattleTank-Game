@@ -28,9 +28,17 @@ void UTankMovementComponent::RequestDirectMove( const FVector & MoveVelocity, bo
 
 	auto ForwardThrow = FVector::DotProduct(FaceDirection, AIMoveIntention);
 	auto Rotate = FVector::CrossProduct(FaceDirection, AIMoveIntention).Z;
+	
+	////////////// UE_LOG ////////////////
+	auto Time = GetWorld()->GetRealTimeSeconds();
+	UE_LOG(LogTemp, Warning, TEXT("%f: %f, %f"), Time, ForwardThrow, Rotate);
 
 	IntendToMove(ForwardThrow);
 	RotateRight(Rotate);
+	ActuateLeft();
+	ActuateRight();
+	ForwardForce = 0;
+	RotateForce = 0;
 }
 
 void UTankMovementComponent::ActuateLeft()

@@ -7,6 +7,7 @@
 #include "TankAIController.generated.h"
 
 class UTankAimingComponent;
+class ATank;
 
 /**
  * Defines the AI Tank behaviour.
@@ -26,4 +27,10 @@ public:
 
 private:
 	UTankAimingComponent* AimingComponent;
+	ATank* PossesedTank = nullptr;
+
+	virtual void SetPawn(APawn* InPawn) override; // Need this to append extra functionality
+	
+	UFUNCTION()
+	void OnPossesedTankDeath();
 };
