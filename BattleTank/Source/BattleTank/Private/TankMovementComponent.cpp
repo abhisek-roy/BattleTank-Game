@@ -3,6 +3,7 @@
 #include "TankMovementComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "DrawDebugHelpers.h"
+
 void UTankMovementComponent::Initialize(UStaticMeshComponent* LeftTrackToSet, UStaticMeshComponent* RightTrackToSet)
 {
     if(!ensure(LeftTrackToSet && RightTrackToSet)) return;
@@ -12,12 +13,14 @@ void UTankMovementComponent::Initialize(UStaticMeshComponent* LeftTrackToSet, US
 
 void UTankMovementComponent::IntendToMove(float Throw)
 {
-	ForwardForce = Throw / 2;
+	ForwardForceLeft = Throw / 2;
+	ForwardForceRight = Throw / 2;
 }
 
 void UTankMovementComponent::RotateRight(float Throw)
 {
-	RotateForce = Throw / 2;
+	RotateForceLeft = Throw / 2;
+	RotateForceRight = Throw / 2;
 }
 
 void UTankMovementComponent::RequestDirectMove( const FVector & MoveVelocity, bool bForceMaxSpeed)
@@ -29,34 +32,32 @@ void UTankMovementComponent::RequestDirectMove( const FVector & MoveVelocity, bo
 	auto ForwardThrow = FVector::DotProduct(FaceDirection, AIMoveIntention);
 	auto Rotate = FVector::CrossProduct(FaceDirection, AIMoveIntention).Z;
 	
-	////////////// UE_LOG ////////////////
-	auto Time = GetWorld()->GetRealTimeSeconds();
-	UE_LOG(LogTemp, Warning, TEXT("%f: %f, %f"), Time, ForwardThrow, Rotate);
-
 	IntendToMove(ForwardThrow);
 	RotateRight(Rotate);
 	ActuateLeft();
 	ActuateRight();
-	ForwardForce = 0;
-	RotateForce = 0;
 }
 
 void UTankMovementComponent::ActuateLeft()
 {
 	if (!ensure(LeftTrack)) return;
-	auto ThrottleLeft = FMath::Clamp(ForwardForce + RotateForce, -1.f, 1.f);
+	auto ThrottleLeft = FMath::Clamp(ForwardForceLeft + RotateForceLeft, -1.f, 1.f);
 	auto LeftForce = ThrottleLeft * MaxTractiveForce * LeftTrack->GetForwardVector();
 	LeftTrack->AddForceAtLocation(LeftForce, LeftTrack->GetComponentLocation());
 	ApplySidewaysForce();
+	ForwardForceLeft = 0;
+	RotateForceLeft = 0;
 }
 
 void UTankMovementComponent::ActuateRight()
 {
 	if (!ensure(RightTrack)) return;
-	auto ThrottleRight = FMath::Clamp(ForwardForce - RotateForce, -1.f, 1.f);
+	auto ThrottleRight = FMath::Clamp(ForwardForceRight - RotateForceRight, -1.f, 1.f);
 	auto RightForce = ThrottleRight * MaxTractiveForce * RightTrack->GetForwardVector();
 	RightTrack->AddForceAtLocation(RightForce, RightTrack->GetComponentLocation());
 	ApplySidewaysForce();
+	ForwardForceRight = 0;
+	RotateForceRight = 0;
 }
 
 void UTankMovementComponent::ApplySidewaysForce()

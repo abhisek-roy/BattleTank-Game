@@ -43,8 +43,8 @@ protected:
 	float MaxTractiveForce = 50000000.0f;
 	
 private:
-	float ForwardForce = 0;
-	float RotateForce = 0;
+	float ForwardForceLeft = 0, ForwardForceRight = 0;
+	float RotateForceLeft = 0, RotateForceRight = 0;
 
 	// Rear Bias, Front Bias = 1 - Bias value
 	UPROPERTY(EditDefaultsOnly, Category = "Tuning", meta = (ClampMin = "0.0", ClampMax = "0.99", UIMin = "0.0", UIMax = "0.99"))
