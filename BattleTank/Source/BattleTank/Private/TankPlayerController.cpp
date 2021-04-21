@@ -8,11 +8,10 @@
 void ATankPlayerController::BeginPlay()
 {
     Super::BeginPlay();
-
     auto AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
     if (ensure(AimingComponent)) FoundAimingComponent(AimingComponent);
-
 }
+
 
 void ATankPlayerController::SetPawn(APawn* InPawn)
 {
@@ -44,7 +43,7 @@ void ATankPlayerController::AimTowardsCrosshair()
 {
     if(!GetPawn()) return;
     auto AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
-    if (ensure(AimingComponent)) FoundAimingComponent(AimingComponent);    
+    if (!ensure(AimingComponent)) return;    
 
     FVector HitLocation;
     if(GetSightRayHitLocation(HitLocation))
@@ -95,7 +94,7 @@ bool ATankPlayerController::GetLookVectorHitLocation(const FVector LookDirection
         HitResult,
         RayStart,
         RayEnd,
-        ECC_Visibility
+        ECollisionChannel::ECC_Camera
         )
     )
     {

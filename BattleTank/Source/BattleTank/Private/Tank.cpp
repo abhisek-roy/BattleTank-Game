@@ -22,7 +22,6 @@ float ATank::TakeDamage(float DamageAmount, struct FDamageEvent const & DamageEv
 {
 	int32 DamagePoints = FPlatformMath::RoundToInt(DamageAmount);
 	int32 DamageToApply = FMath::Clamp(DamagePoints, 0, CurrentHealth);
-	UE_LOG(LogTemp, Warning, TEXT("Damage: %i."), DamageToApply);
 	CurrentHealth -= DamageToApply;
 	if (CurrentHealth <= 0)
 	{
