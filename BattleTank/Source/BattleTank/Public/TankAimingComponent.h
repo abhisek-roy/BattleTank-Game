@@ -16,6 +16,7 @@ enum class EFiringState : uint8
 };
 
 class AProjectile;
+class UAudioComponent;
 
 /**
  * Auto-aiming components
@@ -39,6 +40,12 @@ public:
 
 	EFiringState GetFiringState() const;
 
+	UFUNCTION( BlueprintCallable, Category = "Sound")
+	bool bPlayReloadSound();
+
+	UFUNCTION( BlueprintCallable, Category = "Sound")
+	bool bPlayActuatorSound();
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -57,18 +64,20 @@ private:
 	void ElevateBarrel(float RelSpeed);
 	void OrientTurret(float RelSpeed);
 	bool IsLocked();
+	bool PlayActuatorSound = false;
+	bool PlayReloadSound = false;
 
 	UStaticMeshComponent* Barrel = nullptr;
 	UStaticMeshComponent* Turret = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Category = Firing, meta = (ClampMin = "0", ClampMax = "300", UIMin = "0", UIMax = "300"))
-	int32 TotalAmmo = 3;
+	int32 TotalAmmo = 30;
 	
 	UPROPERTY(EditDefaultsOnly, Category = Firing, meta = (ClampMin = "0.0", ClampMax = "10000", UIMin = "0.0", UIMax = "10000"))
 	float ProjectileSpeed = 4000.0f;
 	
 	UPROPERTY(EditDefaultsOnly, Category = Firing, meta = (ClampMin = "0.0", UIMin = "0.0"))
-	float ReloadTime = 3.f;
+	float ReloadTime = 10.f;
 
 	UPROPERTY(EditDefaultsOnly, Category = Firing, meta = (ClampMin = "0.0", ClampMax = "30", UIMin = "0.0", UIMax = "30"))
 	float BarrelMaxDegreesPerSec = 5.f;
@@ -84,7 +93,11 @@ private:
 
 	float LastFiredAt = 0.f;
 	FVector AimDirection = FVector(0);
+	bool PlayedReloadSound = true;
+	bool IsTurretMoving = false;
+	bool IsBarrelMoving = false;
 
-	UPROPERTY(EditDefaultsOnly, Category = Setup)
+	UPROPERTY(EditAnywhere, Category = Setup)
 	TSubclassOf<AProjectile> ProjectileBlueprint = nullptr;
+	
 };

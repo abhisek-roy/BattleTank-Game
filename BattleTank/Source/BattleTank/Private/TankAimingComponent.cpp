@@ -6,6 +6,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Projectile.h"
+#include "Components/AudioComponent.h"
 
 // Sets default values for this component's properties
 UTankAimingComponent::UTankAimingComponent()
@@ -14,14 +15,13 @@ UTankAimingComponent::UTankAimingComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
 }
 
 void UTankAimingComponent::Initialize(UStaticMeshComponent* BarrelToSet, UStaticMeshComponent* TurretToSet)
 {
     if(!ensure(BarrelToSet && TurretToSet)) return;
 	Barrel = BarrelToSet;
-	Turret = TurretToSet;    
+	Turret = TurretToSet;
 }
 
 // Called when the game starts
@@ -30,6 +30,14 @@ void UTankAimingComponent::BeginPlay()
 	Super::BeginPlay();
 	LastFiredAt = FPlatformTime::Seconds();
 	CurrentAmmo = TotalAmmo;
+
+	// TurretSound = CreateDefaultSubobject<UAudioComponent>(FName("Turret Sound"));
+	// TurretSound->AttachToComponent(GetOwner()->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+	// TurretSound->bAutoActivate = false;
+
+	// ReloadedSound = CreateDefaultSubobject<UAudioComponent>(FName("Reload Sound"));
+	// ReloadedSound->AttachToComponent(GetOwner()->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+	// ReloadedSound->bAutoActivate = false;
 }
 
 void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
@@ -37,16 +45,41 @@ void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickTy
 	if( CurrentAmmo < 1 )
 	{
 		FiringState = EFiringState::OutOfAmmo;
+		PlayReloadSound = false;
+		PlayActuatorSound = false;
 	}else if( FPlatformTime::Seconds() < ReloadTime + LastFiredAt)
 	{
 		FiringState = EFiringState::Reloading;
+		PlayReloadSound = false;
 	}else if (IsLocked())
 	{
 		FiringState = EFiringState::Locked;
+		// if(!ReloadedSound) return;
+		if(!PlayedReloadSound) 
+		{
+			PlayReloadSound = true;
+			PlayedReloadSound = true;
+		}else PlayReloadSound = false;
 	}else
 	{
 		FiringState = EFiringState::Aiming;
+		// Queue the loading sound to be played after ReloadTime
+		if(!PlayedReloadSound) 
+		{
+			PlayReloadSound = true;
+			PlayedReloadSound = true;
+		}else PlayReloadSound = false;
 	}
+
+	if ( IsBarrelMoving || IsTurretMoving )
+	{
+		PlayActuatorSound = true;
+	}else
+	{
+		PlayActuatorSound = false;
+	}
+	IsBarrelMoving = false;
+	IsTurretMoving = false;
 }
 
 EFiringState UTankAimingComponent::GetFiringState() const
@@ -123,7 +156,16 @@ void UTankAimingComponent::ElevateBarrel(float RelSpeed)
 
     RelSpeed = FMath::Clamp<float>(RelSpeed, -1, 1);
 	float Attitude = Barrel->GetRelativeRotation().Pitch + RelSpeed * BarrelMaxDegreesPerSec * GetWorld()->DeltaTimeSeconds;
-    Attitude = FMath::Clamp<float>(Attitude, 0.f, 40.f);
+    Attitude = FMath::Clamp<float>(Attitude, MinElevationDeg, MaxElevationDeg);
+
+	if(FMath::Abs( Attitude - Barrel->GetRelativeRotation().Pitch) > 0.05f)
+	{
+		IsBarrelMoving = true;
+	}else
+	{
+		IsBarrelMoving = false;
+	}
+
     Barrel->SetRelativeRotation(FRotator(Attitude, 0,0));
 }
 
@@ -136,7 +178,15 @@ void UTankAimingComponent::OrientTurret(float RelSpeed)
     RelSpeed = FMath::Clamp<float>(RelSpeed, -1, 1);
     
     float Yaw = Turret->GetRelativeRotation().Yaw + RelSpeed * TurretMaxDegreesPerSec * GetWorld()->DeltaTimeSeconds;
-    Turret->SetRelativeRotation(FRotator(0, Yaw, 0));	
+    Turret->SetRelativeRotation(FRotator(0, Yaw, 0));
+
+	if(FMath::Abs(RelSpeed * TurretMaxDegreesPerSec) > 1.f)
+	{
+		IsTurretMoving = true;
+	}else
+	{
+		IsTurretMoving = false;
+	}	
 }
 
 // Firing
@@ -154,5 +204,16 @@ void UTankAimingComponent::Fire()
 		Projectile->Launch(ProjectileSpeed);
 		LastFiredAt = FPlatformTime::Seconds();
 		CurrentAmmo--;
+		PlayedReloadSound = false;
 	}
+}
+
+bool UTankAimingComponent::bPlayActuatorSound()
+{
+	return PlayActuatorSound;
+}
+
+bool UTankAimingComponent::bPlayReloadSound()
+{
+	return PlayReloadSound;
 }

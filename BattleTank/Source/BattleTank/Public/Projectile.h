@@ -10,6 +10,8 @@ class UProjectileMovementComponent;
 class UStaticMeshComponent;
 class UParticleSystemComponent;
 class URadialForceComponent;
+class USoundBase;
+class USoundAttenuation;
 
 UCLASS()
 class BATTLETANK_API AProjectile : public AActor
@@ -32,6 +34,9 @@ public:
 private:
 	UProjectileMovementComponent* ProjectileMovement = nullptr;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Component")
+	USoundAttenuation* SoundAttenuation = nullptr;
+
 	UPROPERTY(VisibleAnywhere, Category = "Component")
 	UParticleSystemComponent* LaunchBlast = nullptr;
 
@@ -43,6 +48,12 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Component")
 	URadialForceComponent* BlastForce = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Component")
+	USoundBase* BlastSound = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Component")
+	USoundBase* LaunchSound = nullptr;
 
 	// Destroy Projectile after
 	UPROPERTY(EditDefaultsOnly, Category = "Setup", meta = (ClampMin = "0.0", UIMin = "0.0"))

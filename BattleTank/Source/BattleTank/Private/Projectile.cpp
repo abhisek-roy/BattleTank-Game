@@ -5,6 +5,7 @@
 #include "Particles/ParticleSystemComponent.h"
 #include "PhysicsEngine/RadialForceComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Sound/SoundBase.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -31,7 +32,9 @@ AProjectile::AProjectile()
 	BlastForce = CreateDefaultSubobject<URadialForceComponent>(FName("Blast Force"));
 	BlastForce->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	BlastForce->bAutoActivate = false;
-
+	
+	// SoundAttenuation = CreateDefaultSubobject<USoundAttenuation>(FName("Settings"));
+	// BlastForce->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 }
 
 // Called when the game starts or when spawned
@@ -52,6 +55,8 @@ void AProjectile::Launch(float Speed)
 	if(!ensure(ProjectileMovement)) return;
 	ProjectileMovement->SetVelocityInLocalSpace( FVector::ForwardVector * Speed);
 	ProjectileMovement->Activate();
+	if(!ensure(LaunchSound)) return;
+	UGameplayStatics::PlaySoundAtLocation( this, LaunchSound, GetActorLocation(), 1.f, 1.f, 0.f, SoundAttenuation);
 }
 
 void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
@@ -72,6 +77,9 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 		UDamageType::StaticClass() ,
 		TArray<AActor*>() // damage all actors
 	);
+
+	if(!ensure(BlastSound)) return;
+	UGameplayStatics::PlaySoundAtLocation( this, BlastSound, GetActorLocation(), 1.f, 1.f, 0.f, SoundAttenuation);
 
 	FTimerHandle ProjectileDestroyTimer;
 	GetWorld()->GetTimerManager().SetTimer(ProjectileDestroyTimer ,this, &AProjectile::DestroyProjectile, ProjectileLife, false);
