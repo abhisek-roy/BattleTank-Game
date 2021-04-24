@@ -1,7 +1,5 @@
 // Copyright 2021, Abhisek Roy
 
-#define OUT
-
 #include "TankAimingComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -30,14 +28,6 @@ void UTankAimingComponent::BeginPlay()
 	Super::BeginPlay();
 	LastFiredAt = FPlatformTime::Seconds();
 	CurrentAmmo = TotalAmmo;
-
-	// TurretSound = CreateDefaultSubobject<UAudioComponent>(FName("Turret Sound"));
-	// TurretSound->AttachToComponent(GetOwner()->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
-	// TurretSound->bAutoActivate = false;
-
-	// ReloadedSound = CreateDefaultSubobject<UAudioComponent>(FName("Reload Sound"));
-	// ReloadedSound->AttachToComponent(GetOwner()->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
-	// ReloadedSound->bAutoActivate = false;
 }
 
 void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
@@ -54,7 +44,6 @@ void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickTy
 	}else if (IsLocked())
 	{
 		FiringState = EFiringState::Locked;
-		// if(!ReloadedSound) return;
 		if(!PlayedReloadSound) 
 		{
 			PlayReloadSound = true;
@@ -192,15 +181,33 @@ void UTankAimingComponent::OrientTurret(float RelSpeed)
 // Firing
 void UTankAimingComponent::Fire()
 {
-	if(!ProjectileBlueprint) UE_LOG(LogTemp, Error, TEXT("Projectile BLueprint not set.")); 
+	// if(!ProjectileBlueprint) UE_LOG(LogTemp, Error, TEXT("Projectile Blueprint not set.")); 
 
-	if(ensure(Barrel) && ensure(ProjectileBlueprint) && FiringState != EFiringState::Reloading && CurrentAmmo > 0)
+	if(ensure(Barrel) && FiringState != EFiringState::Reloading && CurrentAmmo > 0)
 	{
-		auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, 
-			Barrel->GetSocketLocation(FName("Projectile")), 
-			Barrel->GetSocketRotation(FName("Projectile"))
-		);
+		AProjectile* Projectile = nullptr;
+		if (!ProjectileBlueprint)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Projectile Blueprint not set. Using default."));
 
+			auto MyItemBlueprintClass = StaticLoadClass(UObject::StaticClass(), NULL, 
+										TEXT("/Game/Blueprints/Projectile_BP.Projectile_BP_C"), NULL, LOAD_None, NULL);
+		
+			// Refer: https://answers.unrealengine.com/questions/328407/ive-been-trying-to-spawn-an-actor-in-c-for-the-las.html
+
+			Projectile = GetWorld()->SpawnActor<AProjectile>(MyItemBlueprintClass, Barrel->GetSocketLocation(FName("Projectile")), 
+			Barrel->GetSocketRotation(FName("Projectile"))
+			);
+		}
+		else
+		{
+			Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, 
+				Barrel->GetSocketLocation(FName("Projectile")), 
+				Barrel->GetSocketRotation(FName("Projectile"))
+			);
+		}
+
+		if(!Projectile) return;
 		Projectile->Launch(ProjectileSpeed);
 		LastFiredAt = FPlatformTime::Seconds();
 		CurrentAmmo--;

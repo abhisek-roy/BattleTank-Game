@@ -78,24 +78,24 @@ void UTankMovementComponent::ApplySidewaysForce()
 
 	TankRoot->AddForceAtLocation(SlippageForce * (1 - Bias), ApplicationPointF);
 	TankRoot->AddForceAtLocation(SlippageForce * (Bias), ApplicationPointR);
-	DrawDebugLine(
-		GetWorld(),
-		ApplicationPointF,
-		ApplicationPointF + SlippageForce.GetSafeNormal() * 500,
-		FColor(0, 255, 0),
-		false,
-		0.f,
-		0,
-		5.f
-	);
-	DrawDebugLine(
-		GetWorld(),
-		ApplicationPointR,
-		ApplicationPointR + SlippageForce.GetSafeNormal() * 500,
-		FColor(0, 255, 0),
-		false,
-		0.f,
-		0,
-		5.f
-	);
+	// DrawDebugLine(
+	// 	GetWorld(),
+	// 	ApplicationPointF,
+	// 	ApplicationPointF + SlippageForce.GetSafeNormal() * 500,
+	// 	FColor(0, 255, 0),
+	// 	false,
+	// 	0.f,
+	// 	0,
+	// 	5.f
+	// );
+	// DrawDebugLine(
+	// 	GetWorld(),
+	// 	ApplicationPointR,
+	// 	ApplicationPointR + SlippageForce.GetSafeNormal() * 500,
+	// 	FColor(0, 255, 0),
+	// 	false,
+	// 	0.f,
+	// 	0,
+	// 	5.f
+	// );
 }
