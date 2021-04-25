@@ -13,14 +13,14 @@ void UTankMovementComponent::Initialize(UStaticMeshComponent* LeftTrackToSet, US
 
 void UTankMovementComponent::IntendToMove(float Throw)
 {
-	ForwardForceLeft = Throw / 2;
-	ForwardForceRight = Throw / 2;
+	ForwardForceLeft = Throw / 2.f;
+	ForwardForceRight = Throw / 2.f;
 }
 
 void UTankMovementComponent::RotateRight(float Throw)
 {
-	RotateForceLeft = Throw / 2;
-	RotateForceRight = Throw / 2;
+	RotateForceLeft = Throw;
+	RotateForceRight = - Throw;
 }
 
 void UTankMovementComponent::RequestDirectMove( const FVector & MoveVelocity, bool bForceMaxSpeed)
@@ -52,7 +52,7 @@ void UTankMovementComponent::ActuateLeft()
 void UTankMovementComponent::ActuateRight()
 {
 	if (!ensure(RightTrack)) return;
-	auto ThrottleRight = FMath::Clamp(ForwardForceRight - RotateForceRight, -1.f, 1.f);
+	auto ThrottleRight = FMath::Clamp(ForwardForceRight + RotateForceRight, -1.f, 1.f);
 	auto RightForce = ThrottleRight * MaxTractiveForce * RightTrack->GetForwardVector();
 	RightTrack->AddForceAtLocation(RightForce, RightTrack->GetComponentLocation());
 	ApplySidewaysForce();
@@ -71,7 +71,7 @@ void UTankMovementComponent::ApplySidewaysForce()
 	// Apply extra force to counter sideways slip
 	auto Velocity = TankRoot->GetComponentVelocity();
 	auto SlippageSpeed = FVector::DotProduct(Velocity.GetSafeNormal(), TankRoot->GetRightVector());
-	auto SlippageForce = -MaxTractiveForce * SlippageSpeed * TankRoot->GetRightVector() / 2; // Two application points
+	auto SlippageForce = -MaxTractiveForce * SlippageSpeed * TankRoot->GetRightVector() / 4.f; // Two application points
 
 	FVector ApplicationPointF = TankRoot->GetComponentLocation() + TankRoot->GetUpVector() * CGHeight + TankRoot->GetForwardVector() * CGOffset;
 	FVector ApplicationPointR = TankRoot->GetComponentLocation() + TankRoot->GetUpVector() * CGHeight - TankRoot->GetForwardVector() * CGOffset;
