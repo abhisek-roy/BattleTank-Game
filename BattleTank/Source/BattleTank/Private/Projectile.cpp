@@ -80,7 +80,7 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 	);
 
 	if(!ensure(BlastSound)) return;
-	UGameplayStatics::PlaySoundAtLocation( this, BlastSound, GetActorLocation(), 1.f, 1.f, 0.f, SoundAttenuation);
+	UGameplayStatics::PlaySoundAtLocation( this, BlastSound, GetActorLocation(), 0.5f, 1.f, 0.f, SoundAttenuation);
 
 	FTimerHandle ProjectileDestroyTimer;
 	GetWorld()->GetTimerManager().SetTimer(ProjectileDestroyTimer ,this, &AProjectile::DestroyProjectile, ProjectileLife, false);
