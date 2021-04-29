@@ -53,6 +53,8 @@ private:
 	float CGHeight = 100.f;
 	UPROPERTY(EditDefaultsOnly, Category = "Tuning", meta = (ClampMin = "0.0", ClampMax = "300", UIMin = "0.0", UIMax = "300"))
 	float CGOffset = 200.f;
+	UPROPERTY(EditDefaultsOnly, Category = "Tuning", meta = (ClampMin = "0.0", UIMin = "0.0"))
+	float AdjustForceDueFrameRate = 20.f;
 
 	void ApplySidewaysForce();
 };

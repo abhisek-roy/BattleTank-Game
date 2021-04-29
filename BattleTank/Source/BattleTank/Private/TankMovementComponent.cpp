@@ -34,15 +34,15 @@ void UTankMovementComponent::RequestDirectMove( const FVector & MoveVelocity, bo
 	
 	IntendToMove(ForwardThrow);
 	RotateRight(Rotate);
-	ActuateLeft();
-	ActuateRight();
+	// ActuateLeft();
+	// ActuateRight();
 }
 
 void UTankMovementComponent::ActuateLeft()
 {
 	if (!ensure(LeftTrack)) return;
 	auto ThrottleLeft = FMath::Clamp(ForwardForceLeft + RotateForceLeft, -1.f, 1.f);
-	auto LeftForce = ThrottleLeft * MaxTractiveForce * LeftTrack->GetForwardVector();
+	auto LeftForce = ThrottleLeft * MaxTractiveForce * LeftTrack->GetForwardVector() *( 1 + AdjustForceDueFrameRate * GetWorld()->GetDeltaSeconds() / 10.f);
 	LeftTrack->AddForceAtLocation(LeftForce, LeftTrack->GetComponentLocation());
 	ApplySidewaysForce();
 	ForwardForceLeft = 0;
@@ -53,7 +53,7 @@ void UTankMovementComponent::ActuateRight()
 {
 	if (!ensure(RightTrack)) return;
 	auto ThrottleRight = FMath::Clamp(ForwardForceRight + RotateForceRight, -1.f, 1.f);
-	auto RightForce = ThrottleRight * MaxTractiveForce * RightTrack->GetForwardVector();
+	auto RightForce = ThrottleRight * MaxTractiveForce * RightTrack->GetForwardVector() *( 1 + AdjustForceDueFrameRate * GetWorld()->GetDeltaSeconds() / 10.f);
 	RightTrack->AddForceAtLocation(RightForce, RightTrack->GetComponentLocation());
 	ApplySidewaysForce();
 	ForwardForceRight = 0;
